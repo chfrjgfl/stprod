@@ -8,7 +8,7 @@ import { read, utils, writeFile } from 'xlsx';
 
 //const fs = require("fs");
 
-const issuers = ['JPMorgan', 'SHMorgan', 'Rabinovitch'];
+const issuers = ['JPMorgan', 'Glenlivet', 'Rabinovitch'];
 const issuerCredits = ['A', 'B', 'C', 'D'];
 const inds = ['S&P 500', 'NASDAQ 100', 'RUSSELL 2000'];
 
@@ -28,7 +28,7 @@ const stProd = {
         super(props);
         this.state = {
             prodType: 'A',
-            cusip: 'qwe',
+            cusip: '12345',
             issuer: issuers[0],
             issuerCredit: issuerCredits[0],
             termInMonths: 18,
@@ -83,17 +83,10 @@ const sss = this.state;
                         "Content-Type": "application/json"
                       },
                       body: JSON.stringify(sss),
-//                      mode: "no-cors"
                     });
         const f1 = await f.json();
             alert (f1);
           })(); 
-
-        // axios.post("http://localhost:2000/", this.state, {
-        // }).then(res => {
-        //     console.log(res);
-        // })
-        //xparse ('inds.xlsx', this.state);
 
       }    
     

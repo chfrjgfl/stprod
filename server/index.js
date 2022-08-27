@@ -132,8 +132,8 @@ function calcRTPs (stProd, histData) {
                         'Called Date']: [],
                         stProd.indexes.map(el => `Return ${el} TR`),
                         [''],
-                        stProd.indexes.map(el => `Monthly ${el} TR`),
-                        stProd.indexes.map(el => `Monthly ${el} PR`));                    
+                        stProd.indexes.map(el => `Monthly ${el} PR`),
+                        stProd.indexes.map(el => `Monthly ${el} TR`));                    
 
     const res = [];
     const term = stProd.termInMonths;
