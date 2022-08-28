@@ -33,7 +33,7 @@ const stProd = {
             issuerCredit: issuerCredits[0],
             termInMonths: 18,
             callProtectionMonths: 3, 
-            upFactor: 1.1,
+            upFactor: 1.5,
             callable: true, 
             couponLow: 7.00, 
             couponHigh: 14.00,
@@ -53,8 +53,7 @@ const stProd = {
         const target = event.target;
         const value = target.type === 'checkbox' ? target.checked : target.value;
         const name = target.name;
-    //    if (name === 'upFactor') value /= 10;
-    
+   
         this.setState({            
           [name]: value
         });
@@ -85,7 +84,8 @@ const sss = this.state;
                       body: JSON.stringify(sss),
                     });
         const f1 = await f.json();
-            alert (f1);
+            alert (`Results file: ${f1.filename}`);
+//            alert (f1.statInfo.length);
           })(); 
 
       }    

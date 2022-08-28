@@ -13,7 +13,7 @@ app.post("/api", (req, res) => {
     const r = req.body;
     if (r) {
         let s = main(r);
-        res.json(`Results File: ${s}`);
+        res.json(s);
     }
   });
 
@@ -258,34 +258,63 @@ if (stProd.prodType === 'A') {
 // console.log(statArr);
 // for (let el of statArr) {console.log ((el.findLastIndex( a => a < 0) + 1) * 100 / el.length)};
 
-    XLSX.utils.sheet_add_aoa(wsNew, [
-        ['% Outperforms',,,,,,,,''].concat(maxArr.map(el => +(el*100/res.length).toFixed(2))),
-        ['Minimum',,,,,,,,''].concat(statArr.map(el => stats.minSorted(el))),
-        ['Maximum',,,,,,,,''].concat(statArr.map(el => stats.maxSorted(el))),
-        ['Mean',,,,,,,,''].concat(statArr.map(el => +stats.mean(el).toFixed(2))),
-        ['Mode',,,,,,,,''].concat(statArr.map(el => stats.modeSorted(el))),
-        ['Median',,,,,,,,''].concat(statArr.map(el => stats.medianSorted(el))),
-//        ['Harmonic Mean','', '','', '', '', '','',''].concat(statArr.map(el => stats.harmonicMean(el))),
-        ['Root Mean Square',,,,,,,,''].concat(statArr.map(el => +stats.rootMeanSquare(el).toFixed(2))),
-        ['SampleSkewness',,,,,,,,''].concat(statArr.map(el => +stats.sampleSkewness(el).toFixed(2))),
-        ['Variance',,,,,,,,''].concat(statArr.map(el => +stats.variance(el).toFixed(2))),
-        ['Standard Deviation',,,,,,,,''].concat(statArr.map(el => +stats.standardDeviation(el).toFixed(2))),
-        ['MedianAbsoluteDeviation',,,,,,,,''].concat(statArr.map(el => stats.medianAbsoluteDeviation(el))),
-        ['% Negative',,,,,,,,''].concat(statArr.map(el => +((el.findLastIndex( a => a < 0) + 1) * 100 / el.length).toFixed(2))),
+const statInfo = [
+    {fname: '% Outperforms', array: maxArr.map(el => +(el*100/res.length).toFixed(2))},
+    {fname: 'Minimum', array: statArr.map(el => stats.minSorted(el))},
+    {fname: 'Maximum', array: statArr.map(el => stats.maxSorted(el))},
+    {fname: 'Mean', array: statArr.map(el =>  +stats.mean(el).toFixed(2))},
+    {fname: 'Mode', array: statArr.map(el => stats.modeSorted(el))},
+    {fname: 'Median', array: statArr.map(el => stats.medianSorted(el))},
+    {fname: 'Root Mean Square', array: statArr.map(el => +stats.rootMeanSquare(el).toFixed(2))},
+    {fname: 'SampleSkewness', array: statArr.map(el => +stats.sampleSkewness(el).toFixed(2))},
+    {fname: 'Variance', array: statArr.map(el => +stats.variance(el).toFixed(2))},
+    {fname: 'Standard Deviation', array: statArr.map(el => +stats.standardDeviation(el).toFixed(2))},
+    {fname: 'MedianAbsoluteDeviation', array: statArr.map(el => stats.medianAbsoluteDeviation(el))},
+    {fname: '% Negative', array: statArr.map(el =>  +((el.findLastIndex( a => a < 0) + 1) * 100 / el.length).toFixed(2))},
 
-            ], {origin: -1});   
+];
 
-    for(let m = 1; m<11; m++) {            
-        XLSX.utils.sheet_add_aoa(wsNew, [
-            [`${m}0th Percentile`,,,,,,,,''].concat(statArr.map(el => stats.quantileSorted(el, m/10)))
-                ], {origin: -1}); 
-        if(m == 8) {
-            XLSX.utils.sheet_add_aoa(wsNew, [
-                ['83.35th Percentile',,,,,,,,''].concat(statArr.map(el => stats.quantileSorted(el, 0.8335)))    
-                    ], {origin: -1}); 
-        }  
+for(let m = 1; m < 11; m ++) {            
+    statInfo.push({fname: m + '0th Percentile', array: statArr.map(el => stats.quantileSorted(el, m/10))});
+            
+    if(m == 8) {
+        statInfo.push({fname: '83.35th Percentile', array: statArr.map(el => stats.quantileSorted(el, 0.8335))});
+    }  
+                
+}  
+
+for (let a of statInfo) {
+    XLSX.utils.sheet_add_aoa(wsNew, [[a.fname,,,,,,,,''].concat(a.array)], {origin: -1}); 
+}
+
+
+    // XLSX.utils.sheet_add_aoa(wsNew, [
+    //     ['% Outperforms',,,,,,,,''].concat(maxArr.map(el => +(el*100/res.length).toFixed(2))),
+    //     ['Minimum',,,,,,,,''].concat(statArr.map(el => stats.minSorted(el))),
+    //     ['Maximum',,,,,,,,''].concat(statArr.map(el => stats.maxSorted(el))),
+    //     ['Mean',,,,,,,,''].concat(statArr.map(el => +stats.mean(el).toFixed(2))),
+    //     ['Mode',,,,,,,,''].concat(statArr.map(el => stats.modeSorted(el))),
+    //     ['Median',,,,,,,,''].concat(statArr.map(el => stats.medianSorted(el))),
+    //     ['Root Mean Square',,,,,,,,''].concat(statArr.map(el => +stats.rootMeanSquare(el).toFixed(2))),
+    //     ['SampleSkewness',,,,,,,,''].concat(statArr.map(el => +stats.sampleSkewness(el).toFixed(2))),
+    //     ['Variance',,,,,,,,''].concat(statArr.map(el => +stats.variance(el).toFixed(2))),
+    //     ['Standard Deviation',,,,,,,,''].concat(statArr.map(el => +stats.standardDeviation(el).toFixed(2))),
+    //     ['MedianAbsoluteDeviation',,,,,,,,''].concat(statArr.map(el => stats.medianAbsoluteDeviation(el))),
+    //     ['% Negative',,,,,,,,''].concat(statArr.map(el => +((el.findLastIndex( a => a < 0) + 1) * 100 / el.length).toFixed(2))),
+
+    //         ], {origin: -1});   
+
+    // for(let m = 1; m<11; m++) {            
+    //     XLSX.utils.sheet_add_aoa(wsNew, [
+    //         [`${m}0th Percentile`,,,,,,,,''].concat(statArr.map(el => stats.quantileSorted(el, m/10)))
+    //             ], {origin: -1}); 
+    //     if(m == 8) {
+    //         XLSX.utils.sheet_add_aoa(wsNew, [
+    //             ['83.35th Percentile',,,,,,,,''].concat(statArr.map(el => stats.quantileSorted(el, 0.8335)))    
+    //                 ], {origin: -1}); 
+    //     }  
                     
-    }        
+    // }        
 
     XLSX.utils.sheet_add_aoa(wsNew, [[stProd.cusip, 
                                         stProd['American/European'],
@@ -305,7 +334,7 @@ do {
         fileOK = false;
      }
 } while (!fileOK);
-   return __dirname + '\\xlsx\\' + filename + '.xlsx';    
+   return {filename: __dirname + '\\xlsx\\' + filename + '.xlsx', statInfo: statInfo};    
 }
 
 //---------------------------------------------------
