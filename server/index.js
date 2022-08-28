@@ -166,7 +166,7 @@ function calcRTPs (stProd, histData) {
         for (let j=i+callPrMonths-1; j<i+t; j++) {    // from callPr till endDate - RTP for stProd
             if (stProd.prodType === 'B') j = i+t-1;      
                 o.indReturnPR = histData.indCumulArray.map(el => (j<el[0][0])? '':
-                toPercent(toFraction(el[0][j])/toFraction(el[0][i-1])));
+                +toPercent(toFraction(el[0][j])/toFraction(el[0][i-1])).toFixed(2));
                 worst = o.indReturnPR
                     .reduce((a,b) => (typeof b === 'number'&& b<a)? b:a, 1000);     //worst index from beginning of RTP
                     
@@ -174,7 +174,6 @@ function calcRTPs (stProd, histData) {
                worst < couponBarrier? o.couponMissed ++: o.couponPaid ++;                    
                  o.called = (worst>0);
                  if(o.called) {
-//                    o.endDate = histData.dates[j-1];
                      o.lifeInMonths = j-i+1;
                      j = i+t;
                  }
@@ -189,16 +188,17 @@ function calcRTPs (stProd, histData) {
             o.returnOfSP = worst > 0? worst*stProd.upFactor: 
                     worst < principalBarrier? worst: 0;
         }
+        o.returnOfSP = +o.returnOfSP.toFixed(2);
 
-    o.bondReturn = toPercent(toFraction(histData.bondArray[i + o.lifeInMonths-1])/toFraction(histData.bondArray[i-1]));
+o.bondReturn = +toPercent(toFraction(histData.bondArray[i + o.lifeInMonths-1])/toFraction(histData.bondArray[i-1])).toFixed(2);
 
         o.indReturnTR = histData.indCumulArray.map(el => (i<el[1][0])? '': 
-                toPercent(toFraction(el[1][i + o.lifeInMonths-1])/toFraction(el[1][i])));
-        let x = o.indReturnTR.filter(el => el).length;
-        o.eqIndReturn = o.indReturnTR.reduce((a,b) => a+(b||0)/x, 0);
+                +toPercent(toFraction(el[1][i + o.lifeInMonths-1])/toFraction(el[1][i])).toFixed(2));
+        let x = o.indReturnTR.reduce((a, b) => a += (typeof b === 'number')? 1: 0, 0);
+        o.eqIndReturn = +o.indReturnTR.reduce((a,b) => a+(b||0)/x, 0).toFixed(2);
 
 
-        // if (i >= histData.start[1]) {
+        // if (i >= histData.start[1]) {}
         //     o.indReturnTR = histData.indCumulArray.map(el => (i<el[1][0])? '': 
         //         toPercent(toFraction(el[1][i + o.lifeInMonths-1])/toFraction(el[1][i])));
         //     let x = o.indReturnTR.filter(el => el).length;
@@ -219,8 +219,9 @@ function calcRTPs (stProd, histData) {
                     o.lifeInMonths < 18? histData.dates[i + o.lifeInMonths-3]: '']: [],
                                 o.indReturnTR,
                                 [''],
-                                histData.indArray.map(el => i<el[0][0]? '': el[0][i]),
-                                histData.indArray.map(el => i<el[1][0]? '': el[1][i]));
+                                histData.indArray.map(el => i<el[0][0]? '': +el[0][i].toFixed(2)),
+                                histData.indArray.map(el => i<el[1][0]? '': +el[1][i].toFixed(2)));
+    //            .map(a => typeof a === 'number' && !Number.isInteger(a)? +a.toFixed(2): a);
 
 
         // const fromO = ['', '', '', '', o.startDate, o.endDate]
@@ -245,38 +246,42 @@ for (let el of res) {
 }
 
 const statArr = [];
-statArr.push(res.map(el => el.returnOfSP), res.map(el => el.bondReturn),
-            res.map(el => el.eqIndReturn));   
+statArr.push(res.map(el => el.returnOfSP).sort((a,b)=>a-b), res.map(el => el.eqIndReturn).sort((a,b)=>a-b), 
+        res.map(el => el.bondReturn).sort((a,b)=>a-b));   
 
 if (stProd.prodType === 'A') {
-    statArr.push(res.map(el => el.couponMissed), res.map(el => el.couponPaid),
-            res.map(el => el.lifeInMonths));
+    statArr.push(res.map(el => el.couponMissed).sort((a,b)=>a-b), res.map(el => el.couponPaid).sort((a,b)=>a-b),
+            res.map(el => el.lifeInMonths).sort((a,b)=>a-b));
 
 }
 
+// console.log(statArr);
+// for (let el of statArr) {console.log ((el.findLastIndex( a => a < 0) + 1) * 100 / el.length)};
+
     XLSX.utils.sheet_add_aoa(wsNew, [
-        ['Outperforms',,,,,,,,''].concat(maxArr.map(el => `${(el*100/res.length).toFixed(2)} %`)),
-        ['Minimum',,,,,,,,''].concat(statArr.map(el => stats.min(el))),
-        ['Maximum',,,,,,,,''].concat(statArr.map(el => stats.max(el))),
-        ['Mean',,,,,,,,''].concat(statArr.map(el => stats.mean(el))),
-        ['Mode',,,,,,,,''].concat(statArr.map(el => stats.mode(el))),
-        ['Median',,,,,,,,''].concat(statArr.map(el => stats.median(el))),
+        ['% Outperforms',,,,,,,,''].concat(maxArr.map(el => +(el*100/res.length).toFixed(2))),
+        ['Minimum',,,,,,,,''].concat(statArr.map(el => stats.minSorted(el))),
+        ['Maximum',,,,,,,,''].concat(statArr.map(el => stats.maxSorted(el))),
+        ['Mean',,,,,,,,''].concat(statArr.map(el => +stats.mean(el).toFixed(2))),
+        ['Mode',,,,,,,,''].concat(statArr.map(el => stats.modeSorted(el))),
+        ['Median',,,,,,,,''].concat(statArr.map(el => stats.medianSorted(el))),
 //        ['Harmonic Mean','', '','', '', '', '','',''].concat(statArr.map(el => stats.harmonicMean(el))),
-        ['Root Mean Square',,,,,,,,''].concat(statArr.map(el => stats.rootMeanSquare(el))),
-        ['SampleSkewness',,,,,,,,''].concat(statArr.map(el => stats.sampleSkewness(el))),
-        ['Variance',,,,,,,,''].concat(statArr.map(el => stats.variance(el))),
-        ['Standard Deviation',,,,,,,,''].concat(statArr.map(el => stats.standardDeviation(el))),
+        ['Root Mean Square',,,,,,,,''].concat(statArr.map(el => +stats.rootMeanSquare(el).toFixed(2))),
+        ['SampleSkewness',,,,,,,,''].concat(statArr.map(el => +stats.sampleSkewness(el).toFixed(2))),
+        ['Variance',,,,,,,,''].concat(statArr.map(el => +stats.variance(el).toFixed(2))),
+        ['Standard Deviation',,,,,,,,''].concat(statArr.map(el => +stats.standardDeviation(el).toFixed(2))),
         ['MedianAbsoluteDeviation',,,,,,,,''].concat(statArr.map(el => stats.medianAbsoluteDeviation(el))),
+        ['% Negative',,,,,,,,''].concat(statArr.map(el => +((el.findLastIndex( a => a < 0) + 1) * 100 / el.length).toFixed(2))),
 
             ], {origin: -1});   
 
     for(let m = 1; m<11; m++) {            
         XLSX.utils.sheet_add_aoa(wsNew, [
-            [`${m}0th Percentile`,,,,,,,,''].concat(statArr.map(el => stats.quantile(el, m/10)))
+            [`${m}0th Percentile`,,,,,,,,''].concat(statArr.map(el => stats.quantileSorted(el, m/10)))
                 ], {origin: -1}); 
         if(m == 8) {
             XLSX.utils.sheet_add_aoa(wsNew, [
-                ['83.35th Percentile',,,,,,,,''].concat(statArr.map(el => stats.quantile(el, 0.8335)))    
+                ['83.35th Percentile',,,,,,,,''].concat(statArr.map(el => stats.quantileSorted(el, 0.8335)))    
                     ], {origin: -1}); 
         }  
                     
