@@ -22,6 +22,7 @@ body {
   .mybtn {
     margin-top: 10px;
     margin-left: 50px;
+    margin-bottom: 15px;
   }
 
   .board-row:after {
@@ -34,35 +35,17 @@ body {
     margin-bottom: 10px;
   }
   
-  .square {
-    background: #fff;
-    border: 1px solid #999;
-    float: left;
-    font-size: 24px;
-    font-weight: bold;
-    line-height: 34px;
-    height: 34px;
-    margin-right: -1px;
-    margin-top: -1px;
-    padding: 0;
-    text-align: center;
-    width: 34px;
+  fieldset {
+    display: inline;
+    border-radius: 5px;
+    float: left
   }
-  
-  .square:focus {
-    outline: none;
+
+  .radiolabel {
+    margin-left: -18px;
+    text-align: left;
   }
-  
-  .kbd-navigation .square:focus {
-    background: #ddd;
-  }
-  
-  .game {
-    display: flex;
-    flex-direction: row;
-  }
-  
-  .game-info {
-    margin-left: 20px;
-  }
-  
+
+  /* input[type="radio"] {
+    margin-right: 0;
+  } */

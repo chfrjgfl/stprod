@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client';
 import './Options.css';
 //import axios from 'axios';
 import { read, utils, writeFile } from 'xlsx';
+import StatInfo from './StatInfo.js';
 
 //import {xparse} from "./nxlsx.js";
 
@@ -11,16 +12,19 @@ import { read, utils, writeFile } from 'xlsx';
 const issuers = ['JPMorgan', 'Glenlivet', 'Rabinovitch'];
 const issuerCredits = ['A', 'B', 'C', 'D'];
 const inds = ['S&P 500', 'NASDAQ 100', 'RUSSELL 2000'];
+const prodTypes = [{key:'A', type: 'Coupon'}, {key: 'B', type: 'Growth'}];
 
-const stProd = {
-    cusip: '12345',
-    issuer: '',
-    issuerCredit: '',
-    termInMonths: 18,
-    callProtectionMonths: 3, 
+
+
+// const stProd = {
+//     cusip: '12345',
+//     issuer: '',
+//     issuerCredit: '',
+//     termInMonths: 18,
+//     callProtectionMonths: 3, 
      
 
-};
+// };
 
   
   class Options extends React.Component {
@@ -40,7 +44,8 @@ const stProd = {
             couponBarrier: -30,
             memory: false,
             principalBarrier: -50,
-            indexes: ['S&P 500', 'NASDAQ 100', 'RUSSELL 2000']
+            indexes: ['S&P 500', 'NASDAQ 100', 'RUSSELL 2000'],
+            statInfo: [],
         };
     
         this.handleInputChange = this.handleInputChange.bind(this);
@@ -85,29 +90,48 @@ const sss = this.state;
                     });
         const f1 = await f.json();
             alert (`Results file: ${f1.filename}`);
-//            alert (f1.statInfo.length);
+
+            this.setState({
+              statInfo: f1.statInfo
+            });
+
+            alert (f1.statInfo.length);
+    //        renderStatInfo(f1.statInfo);
+            
           })(); 
 
       }    
+
+   
     
     render() {
        
       return (
         <>
-        
+         <fieldset >
+        <legend> Options </legend>
+
         <form padding="5" onSubmit={this.handleSubmit} >
         
             <br/> 
             <label>Product Type:
+
+                  {prodTypes.map((el, i) => (
+                    <>
+                    <input type="radio" id={(i + 1).toString()} onChange={this.handleInputChange}
+                      name="prodType" value={el.key} defaultChecked={i==0}/>
+                      <label className="radiolabel" htmlFor={(i + 1).toString()}>{el.type}</label>
+                      </>
+                  ))}
                 
-                    <input type="radio" id="1" onChange={this.handleInputChange}
-                    name="prodType" value="A" defaultChecked />  
-                    <label htmlFor="1">A</label>
+                    {/* <input type="radio" id="1" onChange={this.handleInputChange}
+                    name="prodType" value="A" defaultChecked />  {this.target.value}
+                    <label htmlFor="1"></label>
 
                     <input type="radio" id="2" onChange={this.handleInputChange}
                     name="prodType" value="B" />  
-                    <label htmlFor="2">B</label>
-               
+                    <label htmlFor="2">{prodTypes[value]}</label>
+                */}
             </label>   
             <br/>
                         
@@ -253,6 +277,15 @@ const sss = this.state;
             <br/>
             <button type="submit" className="mybtn">Submit</button>
         </form>
+
+        </fieldset>
+
+        {(this.state.statInfo.length > 0) && <fieldset >
+        <legend> Stats Summary </legend>
+
+        <StatInfo statInfo = {this.state.statInfo} />
+        
+        </fieldset>}
 
         </>
       );

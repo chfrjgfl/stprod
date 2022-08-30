@@ -269,7 +269,7 @@ const statInfo = [
     {fname: 'SampleSkewness', array: statArr.map(el => +stats.sampleSkewness(el).toFixed(2))},
     {fname: 'Variance', array: statArr.map(el => +stats.variance(el).toFixed(2))},
     {fname: 'Standard Deviation', array: statArr.map(el => +stats.standardDeviation(el).toFixed(2))},
-    {fname: 'MedianAbsoluteDeviation', array: statArr.map(el => stats.medianAbsoluteDeviation(el))},
+    {fname: 'MedianAbsoluteDeviation', array: statArr.map(el => +stats.medianAbsoluteDeviation(el).toFixed(2))},
     {fname: '% Negative', array: statArr.map(el =>  +((el.findLastIndex( a => a < 0) + 1) * 100 / el.length).toFixed(2))},
 
 ];
