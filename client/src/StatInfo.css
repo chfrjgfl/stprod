@@ -5,4 +5,11 @@ th, td {
 
   }
   
-  
+table {
+    margin-top: 15px;
+}  
+
+.radiolabel {
+    margin-left: -18px;
+    text-align: left;
+  }

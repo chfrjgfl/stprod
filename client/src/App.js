@@ -7,28 +7,39 @@ import './Options.css';
 function App() {
   const [data, setData] = React.useState(null);
 
-//    React.useEffect(() => {
-//      fetch("/api", {
-//     method: "POST", 
-//     headers: {
-//       "Content-Type": "application/json"
-//     },
-//     body: JSON.stringify({name: "John", age:23}),
-// //    mode: "no-cors"
-//   })
-//        .then((res) => res.json())
-//        .then((data) => alert(data.name));
-//    }, []);
 
   return (
     <div className="App">
-      {/* <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>{!data ? "Loading..." : data}</p>
-      </header> */}
+      
       <Options />
     </div>
   );
 }
 
 export default App;
+
+// import React, { useState } from 'react';
+
+// function App() {
+//    const [value, setValue] = useState(1);
+   
+//    function chengeValue() {
+//       setValue(event.target.value);
+//    }
+
+//    return <div>
+//       <input type="radio" name="radio" value="1"
+//       checked={value == '1' ? true : false}
+//       onChange={chengeValue} />
+
+//       <input type="radio" name="radio" value="2"
+//       checked={value == '2' ? true : false}
+//       onChange={chengeValue} />
+
+//       <input type="radio" name="radio" value="3"
+//       checked={value == '3' ? true : false}
+//       onChange={chengeValue} />
+//    </div>;
+// }
+
+// export default App;

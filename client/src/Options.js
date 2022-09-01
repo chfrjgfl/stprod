@@ -31,6 +31,7 @@ const prodTypes = [{key:'A', type: 'Coupon'}, {key: 'B', type: 'Growth'}];
     constructor(props) {
         super(props);
         this.state = {
+//          options: {
             prodType: 'A',
             cusip: '12345',
             issuer: issuers[0],
@@ -45,6 +46,7 @@ const prodTypes = [{key:'A', type: 'Coupon'}, {key: 'B', type: 'Growth'}];
             memory: false,
             principalBarrier: -50,
             indexes: ['S&P 500', 'NASDAQ 100', 'RUSSELL 2000'],
+//          },
             statInfo: [],
         };
     
@@ -78,7 +80,7 @@ const prodTypes = [{key:'A', type: 'Coupon'}, {key: 'B', type: 'Growth'}];
       handleSubmit(event) {
         event.preventDefault();
         alert(JSON.stringify(this.state));
-//       const formdata = new FormData(event.currentTarget);
+        
 const sss = this.state;
        (async() => {
             const f = await fetch("/api", {
@@ -94,9 +96,6 @@ const sss = this.state;
             this.setState({
               statInfo: f1.statInfo
             });
-
-            alert (f1.statInfo.length);
-    //        renderStatInfo(f1.statInfo);
             
           })(); 
 
@@ -120,7 +119,7 @@ const sss = this.state;
                     <>
                     <input type="radio" id={(i + 1).toString()} onChange={this.handleInputChange}
                       name="prodType" value={el.key} defaultChecked={i==0}/>
-                      <label className="radiolabel" htmlFor={(i + 1).toString()}>{el.type}</label>
+                      <label className="radiolabel" htmlFor={`${i + 1}`}>{el.type}</label>
                       </>
                   ))}
                 
