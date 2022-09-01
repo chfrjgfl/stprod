@@ -1,10 +1,5 @@
 @echo off
-title Structured Products Testing
-cd client
-npm install
-cd ..
-npm install
-npm run build
+echo In your browser, open http://localhost:3001
 npm start
+
 pause
-exit
