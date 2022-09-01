@@ -46,17 +46,17 @@ function StatInfo (props) {
     const { statInfo } = props;
     const [mode, setMode] = useState('0');
 
-    function handleChange() {
+    function handleChange(event) {
       setMode(event.target.value);
    }
 
     return (
       <>
-                  <input type="radio" id="3" onChange={handleChange}
+                  <input type="radio" id="3" onChange={event => handleChange(event)}
                     name="mode" value="0" checked={mode == '0' ? true : false} /> 
                     <label className="radiolabel" htmlFor="3">Any Ind Active</label>
 
-                    <input type="radio" id="4" onChange={handleChange}
+                    <input type="radio" id="4" onChange={event => handleChange(event)}
                     name="mode" value="1" checked={mode == '1' ? true : false} />  
                     <label className="radiolabel" htmlFor="4">3 Inds Active</label>
 
