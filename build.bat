@@ -1,7 +1,3 @@
-@echo off
-cd client
-npm install
-cd ..
-npm install
+echo off
 npm run build
 pause
