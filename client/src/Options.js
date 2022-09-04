@@ -4,6 +4,9 @@ import './Options.css';
 //import axios from 'axios';
 import { read, utils, writeFile } from 'xlsx';
 import StatInfo from './StatInfo.js';
+import Form from './Form.js';
+import Graphs from './Graphs.js';
+
 
 //import {xparse} from "./nxlsx.js";
 
@@ -31,7 +34,7 @@ const prodTypes = [{key:'A', type: 'Coupon'}, {key: 'B', type: 'Growth'}];
     constructor(props) {
         super(props);
         this.state = {
-//          options: {
+          options: {
             prodType: 'A',
             cusip: '12345',
             issuer: issuers[0],
@@ -46,8 +49,13 @@ const prodTypes = [{key:'A', type: 'Coupon'}, {key: 'B', type: 'Growth'}];
             memory: false,
             principalBarrier: -50,
             indexes: ['S&P 500', 'NASDAQ 100', 'RUSSELL 2000'],
-//          },
+          },
             statInfo: [],
+            statArr:[],
+        };
+
+        this.responseState = {
+
         };
     
         this.handleInputChange = this.handleInputChange.bind(this);
@@ -77,18 +85,20 @@ const prodTypes = [{key:'A', type: 'Coupon'}, {key: 'B', type: 'Growth'}];
         });
       }
 
-      handleSubmit(event) {
+      handleSubmit = async (event, options) => {
         event.preventDefault();
-        alert(JSON.stringify(this.state));
-        
-const sss = this.state;
-       (async() => {
+        alert(JSON.stringify(options));
+        this.setState({
+            options: options
+          });
+//const sss = this.state;
+//       (async() => {
             const f = await fetch("/api", {
                       method: "POST", 
                       headers: {
                         "Content-Type": "application/json"
                       },
-                      body: JSON.stringify(sss),
+                      body: JSON.stringify(options),
                     });
         const f1 = await f.json();
             alert (`Results file: ${f1.filename}`);
@@ -96,8 +106,12 @@ const sss = this.state;
             this.setState({
               statInfo: f1.statInfo
             });
+
+            this.setState({
+                statArr: f1.statArr
+              });
             
-          })(); 
+//          })(); 
 
       }    
 
@@ -107,184 +121,32 @@ const sss = this.state;
        
       return (
         <>
-         <fieldset >
+         <fieldset className = "form">
         <legend> Options </legend>
 
-        <form padding="5" onSubmit={this.handleSubmit} >
-        
-            <br/> 
-            <label>Product Type:
-
-                  {prodTypes.map((el, i) => (
-                    <>
-                    <input type="radio" id={(i + 1).toString()} onChange={this.handleInputChange}
-                      name="prodType" value={el.key} defaultChecked={i==0}/>
-                      <label className="radiolabel" htmlFor={`${i + 1}`}>{el.type}</label>
-                      </>
-                  ))}
-                
-                    {/* <input type="radio" id="1" onChange={this.handleInputChange}
-                    name="prodType" value="A" defaultChecked />  {this.target.value}
-                    <label htmlFor="1"></label>
-
-                    <input type="radio" id="2" onChange={this.handleInputChange}
-                    name="prodType" value="B" />  
-                    <label htmlFor="2">{prodTypes[value]}</label>
-                */}
-            </label>   
-            <br/>
-                        
-
-            <br/>       
-            <label>CUSIP: <input    
-                name = "cusip"
-                type = "text"
-                value = {this.state.cusip}
-                onChange = {this.handleInputChange}
-            ></input>
-            </label>            
-
-            <br/>
-            <label>Issuer: <select    
-                name = "issuer"
-                value = {this.state.issuer}
-                onChange = {this.handleInputChange}    
-            >
-                {issuers.map(item => <option>{item}</option> )}        
-            </select>    
-            </label>
-
-            <br/>
-            <label>IssuerCredit: <select    
-                name = "issuerCredit"
-                value = {this.state.issuerCredit}
-                onChange = {this.handleInputChange}    
-            >
-                {issuerCredits.map(item => <option>{item}</option> )}
-            </select>    
-            </label>
-
-            <br/>
-            <label>TermInMonths: <input    
-                name = "termInMonths"
-                type = "number"
-                min = "12"
-                max = "60"
-                value = {this.state.termInMonths}
-                onChange = {this.handleInputChange}    
-            >
-            </input>    
-            </label>
-
-           
-            {this.state.prodType === "A" && <label>
-
-            <label><br/>CallProtectionMonths: <input    
-                name = "callProtectionMonths"
-                type = "number"
-                min = "1"
-                max = "10"
-                value = {this.state.callProtectionMonths}
-                onChange = {this.handleInputChange}    
-            >    
-            </input>    
-            </label>
-
-            
-            <label><br/>Callable: <input
-                name="callable"
-                type="checkbox"
-                checked={this.state.callable}
-                onChange={this.handleInputChange} />
-            </label>
-
-            
-            <label><br/>CouponLow: <input
-                name="couponLow"
-                type="number"
-                min = "0"
-                value={this.state.couponLow}
-                onChange={this.handleInputChange} />
-            </label>
-
-            
-            <label><br/>CouponHigh: <input
-                name="couponHigh"
-                type="number"
-                min = "0"
-                value={this.state.couponHigh}
-                onChange={this.handleInputChange} />
-            </label>
-
-            
-            <label><br/>CouponBarrier: <input
-                name="couponBarrier"
-                type="number"
-                min = "-100"
-                max = "0"
-                value={this.state.couponBarrier}
-                onChange={this.handleInputChange} /> %
-            </label>
-
-            
-            <label><br/>Memory: <input
-                name="memory"
-                type="checkbox"
-                checked={this.state.memory}
-                onChange={this.handleInputChange} />
-            </label>
-            </label> }
-
-            {this.state.prodType === "B" && <label>
-            <br/>UpLevFactor: <input
-                name="upFactor"
-                type="number"
-                min = "0"
-                max = "5"
-                step = "0.1"
-                value={this.state.upFactor}
-                onChange={this.handleInputChange}/>
-            </label>}
-            
-            <label><br/>PrincipalBarrier: <input
-                name="principalBarrier"
-                type="number"
-                min = "-100"
-                max = "0"
-                value={this.state.principalBarrier}
-                onChange={this.handleInputChange} /> %
-            </label>
-
-            <br/>
-            <label>Indexes: <select    
-                name = "indexes"
-                multiple = {true}
-                size = {Math.min(inds.length, 4)}
-                value = {this.state.indexes}
-                onChange = {this.handleMultInputChange}    
-            >
-                {inds.map(item => <option >{item}</option> )}        
-            </select>    
-            </label>
-
-            <br/>
-            <label> <span className='mylabel'>
-                {this.state.indexes.join(' - ')}
-                </span>
-            </label>
-
-            <br/>
-            <button type="submit" className="mybtn">Submit</button>
-        </form>
+        <Form options = {this.state.options}
+              handleSubmit = {this.handleSubmit}  
+        />
 
         </fieldset>
 
-        {(this.state.statInfo.length > 0) && <fieldset >
+        {(this.state.statInfo.length > 0) && <>
+
+        <fieldset className = "table">
         <legend> Stats Summary </legend>
 
         <StatInfo statInfo = {this.state.statInfo} />
         
-        </fieldset>}
+        </fieldset>
+        
+        <fieldset className = "graph">
+        <legend> Graphs </legend>
+
+        <Graphs data = {this.state}/>
+        
+        </fieldset>
+        </>
+        }
 
         </>
       );

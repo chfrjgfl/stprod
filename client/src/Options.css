@@ -36,9 +36,9 @@ body {
   }
   
   fieldset {
-    display: inline;
+    display: inline-block;
     border-radius: 5px;
-    float: left
+    
   }
 
   .radiolabel {
@@ -46,6 +46,15 @@ body {
     text-align: left;
   }
 
-  /* input[type="radio"] {
-    margin-right: 0;
-  } */
+
+  .graph {
+     float: none; 
+     width: auto;
+    max-width: 600px;
+    /* float: left; */
+  }
+
+  .form, .table {
+    float: left; 
+  }
+  

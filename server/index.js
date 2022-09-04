@@ -326,7 +326,7 @@ do {
         fileOK = false;
      }
 } while (!fileOK);
-   return {filename: __dirname + '\\xlsx\\' + filename + '.xlsx', statInfo: statInfo};    
+   return {filename: __dirname + '\\xlsx\\' + filename + '.xlsx', statInfo: statInfo, statArr: statArr};    
 }
 
 //---------------------------------------------------
