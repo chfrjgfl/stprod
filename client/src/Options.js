@@ -120,35 +120,40 @@ const prodTypes = [{key:'A', type: 'Coupon'}, {key: 'B', type: 'Growth'}];
     render() {
        
       return (
-        <>
-         <fieldset className = "form">
-        <legend> Options </legend>
+        <div class="row">
+          <div className = "formdiv">
+            <fieldset className = "form">
+              <legend> Options </legend>
 
-        <Form options = {this.state.options}
-              handleSubmit = {this.handleSubmit}  
-        />
+              <Form options = {this.state.options}
+                    handleSubmit = {this.handleSubmit}  
+              />
 
-        </fieldset>
+            </fieldset>
+          </div>
+          
+          {(this.state.statInfo.length > 0) && <>
+            <div className = "tablediv">
+              <fieldset className = "table">
+                <legend> Stats Summary </legend>
 
-        {(this.state.statInfo.length > 0) && <>
+                <StatInfo statInfo = {this.state.statInfo} />
+                
+              </fieldset>
+            </div>
 
-        <fieldset className = "table">
-        <legend> Stats Summary </legend>
+            <div className = "graphdiv">
+              <fieldset className = "graph">
+                <legend> Graphs </legend>
 
-        <StatInfo statInfo = {this.state.statInfo} />
-        
-        </fieldset>
-        
-        <fieldset className = "graph">
-        <legend> Graphs </legend>
+                <Graphs data = {this.state}/>
+              
+              </fieldset>
+            </div>
+            </>
+          }
 
-        <Graphs data = {this.state}/>
-        
-        </fieldset>
-        </>
-        }
-
-        </>
+    </div>
       );
     }
   }

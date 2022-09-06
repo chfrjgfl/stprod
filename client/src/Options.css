@@ -2,7 +2,52 @@ body {
     font: 14px "Century Gothic", Futura, sans-serif;
     margin: 20px;
   }
-  
+
+  .row {
+    overflow: auto;
+    width: 100%;
+}
+
+.formdiv {
+  background-color: aquamarine;
+  float: left; 
+  /* margin-right: 5px;  */
+  border: 1px solid;
+
+}
+
+.tablediv {
+  background-color: rgb(168, 227, 86);
+  float: left; 
+  /* margin-right: 5px; */
+  border: 1px solid;
+
+}
+
+.graphdiv {
+  background-color: rgb(199, 81, 134);
+  float: none;
+  overflow: auto;
+  width: auto;
+  margin-right: 0;
+  border: 1px solid;
+
+}  
+
+fieldset {
+  border-radius: 5px;    
+}
+
+/* .form, .table {
+  float: left; 
+} */
+
+.graph {
+  /* float: right;   
+  right: 3px; */
+  min-width: initial
+}
+
   ol, ul {
     padding-left: 30px;
   }
@@ -35,11 +80,7 @@ body {
     margin-bottom: 10px;
   }
   
-  fieldset {
-    display: inline-block;
-    border-radius: 5px;
-    
-  }
+  
 
   .radiolabel {
     margin-left: -18px;
@@ -47,14 +88,10 @@ body {
   }
 
 
-  .graph {
-     float: none; 
-     width: auto;
-    max-width: 600px;
-    /* float: left; */
-  }
-
-  .form, .table {
-    float: left; 
-  }
   
+
+ 
+  
+
+  
+ 

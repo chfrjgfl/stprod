@@ -317,7 +317,7 @@ XLSX.utils.sheet_add_aoa(wsNew, [[stProd.cusip,
         const wbNew = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(wbNew, wsNew, stProd.cusip);
 let fileOK = true;
-let filename = stProd.cusip; ;
+let filename = stProd.cusip; 
 do {
     try { XLSX.writeFile(wbNew, __dirname + '\\xlsx\\' + filename + '.xlsx');
         fileOK = true;
