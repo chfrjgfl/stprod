@@ -49,8 +49,7 @@ function Graphs (props) {
                 chartType="Histogram"
                 key = {i.toString()}
                 data={[['index', 'return']].concat(ar.map((el, ind) => [ind.toString(), el]))}
-                options={ {title: ['StProd ', 'IndBlend ', 'Bond '][i]+'distribution' ,
-                // legend: { position: "none" },
+                options={  {title: ['StProd ', 'IndBlend ', 'Bond '][i]+'distribution' ,
                 colors: ["#4285F4"],
                  chartArea: { width: "90%",
                               height: "auto", 
@@ -66,11 +65,40 @@ function Graphs (props) {
                   maxNumBuckets: 200,                
                   lastBucketPercentile: 2,
                 }
-              }}         
+              } }         
                 // title={['StProd ', 'IndBlend ', 'Bond '][i]+options.title}
             /> 
       
       ))}  
+
+{statArr.slice(3).map((ar, i) => (                                
+
+<Chart
+     chartType="Histogram"
+     key = {i.toString()}
+     data={[['index', 'return']].concat(ar.map((el, ind) => [ind.toString(), el]))}
+     options={  {title: ['Coup.Missed ', 'Coup. Paid ', 'LifeInMonths '][i]+'distribution' ,
+     colors: ["#4285F4"],
+      chartArea: { width: "90%",
+                   height: "auto", 
+                   backgroundColor: "beige",
+                   right: 10,
+                 },
+     hAxis: {
+       //title: 'Return',  
+     },
+     bar: { gap: 0 },
+     histogram: {
+       bucketSize: 1,
+       maxNumBuckets: 40,                
+       lastBucketPercentile: 0,
+     }
+   } }         
+     // title={['StProd ', 'IndBlend ', 'Bond '][i]+options.title}
+ /> 
+
+))}  
+
       </>
     );
   

@@ -13,3 +13,7 @@ table {
     margin-left: -18px;
     text-align: left;
   }
+
+.donut {
+  float: left;
+}  
