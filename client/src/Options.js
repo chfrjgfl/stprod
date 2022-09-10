@@ -122,33 +122,26 @@ const prodTypes = [{key:'A', type: 'Coupon'}, {key: 'B', type: 'Growth'}];
       return (
         <div class="row">
           <div className = "formdiv">
-            <fieldset className = "form">
-              <legend> Options </legend>
+            
 
               <Form options = {this.state.options}
                     handleSubmit = {this.handleSubmit}  
               />
 
-            </fieldset>
+           
           </div>
           
           {(this.state.statInfo.length > 0) && <>
             <div className = "tablediv">
-              <fieldset className = "table">
-                <legend> Stats Summary </legend>
 
                 <StatInfo statInfo = {this.state.statInfo} />
                 
-              </fieldset>
             </div>
 
             <div className = "graphdiv">
-              <fieldset className = "graph">
-                <legend> Graphs </legend>
 
                 <Graphs data = {this.state}/>
-              
-              </fieldset>
+    
             </div>
             </>
           }

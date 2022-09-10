@@ -17,3 +17,8 @@ table {
 .donut {
   float: left;
 }  
+
+fieldset {
+  border-radius: 5px;   
+  min-width: initial; 
+}

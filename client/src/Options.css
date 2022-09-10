@@ -4,45 +4,53 @@ body {
   }
 
   .row {
-    overflow: auto;
-    width: 100%;
+    /* overflow: auto;   так было
+    width: 100%; */
+    display: flex;
+    align-items: flex-start;
 }
 
 .formdiv {
   background-color: aquamarine;
-  float: left; 
+  /* float: left;    так было */
   /* margin-right: 5px;  */
   border: 1px solid;
+  flex-shrink: 0; 
 
 }
 
 .tablediv {
   background-color: rgb(168, 227, 86);
-  float: left; 
+  /* float: left;   так было*/
+  overflow: auto;
+  width: auto; 
   /* margin-right: 5px; */
   border: 1px solid;
-
+  
+  flex-shrink: 0; 
 }
 
 .graphdiv {
   background-color: rgb(199, 81, 134);
-  float: none;
+   /* float: none;   так было */
   overflow: auto;
-  width: auto;
+  width: auto; 
   margin-right: 0;
   border: 1px solid;
-
+  flex-shrink: 2; 
+  flex-grow: 1;
 }  
 
 fieldset {
-  border-radius: 5px;    
+  border-radius: 5px;   
+  /* min-width: initial;  */
 }
 
 /* .form, .table {
   float: left; 
 } */
 
-.graph {
+.graph, .table {
   /* float: right;   
   right: 3px; */
   min-width: initial
@@ -69,18 +77,6 @@ fieldset {
     margin-left: 50px;
     margin-bottom: 15px;
   }
-
-  .board-row:after {
-    clear: both;
-    content: "";
-    display: table;
-  }
-  
-  .status {
-    margin-bottom: 10px;
-  }
-  
-  
 
   .radiolabel {
     margin-left: -18px;
