@@ -327,14 +327,14 @@ XLSX.utils.sheet_add_aoa(wsNew, [[stProd.cusip,
         XLSX.utils.book_append_sheet(wbNew, wsNew, stProd.cusip);
 let fileOK = true;
 let filename = stProd.cusip; 
-// do {
-//     try { XLSX.writeFile(wbNew, __dirname + '\\xlsx\\' + filename + '.xlsx');
-//         fileOK = true;
-//     } catch {
-//         filename += '-1';
-//         fileOK = false;
-//      }
-// } while (!fileOK);
+if (filename) do {
+    try { XLSX.writeFile(wbNew, __dirname + '\\xlsx\\' + filename + '.xlsx');
+        fileOK = true;
+    } catch {
+        filename += '-1';
+        fileOK = false;
+     }
+} while (!fileOK);
    return {filename: __dirname + '\\xlsx\\' + filename + '.xlsx', statInfo: statInfo, statArr: statArr};    
 }
 
