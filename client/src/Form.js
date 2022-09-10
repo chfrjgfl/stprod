@@ -41,7 +41,9 @@ function Form (props) {
    }
 
     return (
-      <>
+     
+      <fieldset className = "form">
+              <legend> Options </legend>
       <form padding="5"  >
         
         <br/> 
@@ -213,8 +215,8 @@ function Form (props) {
         <br/>
         <button type="submit" className="mybtn" onClick={event => props.handleSubmit(event, opts)}>Submit</button>
     </form>
-
-      </>
+    </fieldset>
+   
     );
   
 }

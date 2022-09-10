@@ -146,6 +146,7 @@ function calcRTPs (stProd, histData) {
     const callPrMonths = stProd.callable? stProd.callProtectionMonths: 0;
     const couponLow = stProd.couponLow;
     const couponBarrier = stProd.couponBarrier;//-100);//*100;
+    const memory = stProd.memory;
    
     const wsNew = XLSX.utils.aoa_to_sheet([outputHeader]);
   
@@ -176,7 +177,15 @@ function calcRTPs (stProd, histData) {
                     .reduce((a,b) => (typeof b === 'number'&& b<a)? b:a, 1000);     //worst index from beginning of RTP
                     
         if (stProd.prodType === 'A') {    
-               worst < couponBarrier? o.couponMissed ++: o.couponPaid ++;                    
+              if (memory) {
+                if (worst < couponBarrier) {
+                    o.couponMissed ++;
+                    } else {
+                        o.couponPaid += 1 + o.couponMissed;
+                        o.couponMissed = 0;
+                        }
+
+              } else worst < couponBarrier? o.couponMissed ++: o.couponPaid ++;                    
                  o.called = (worst>0);
                  if(o.called) {
                      o.lifeInMonths = j-i+1;
