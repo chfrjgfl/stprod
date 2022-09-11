@@ -264,7 +264,9 @@ o.bondReturn = +toPercent(toFraction(histData.bondArray[i + o.lifeInMonths-1])/t
         statArr.push(res.map(el => el.couponMissed), res.map(el => el.couponPaid),
                 res.map(el => el.lifeInMonths));
         }
-    
+
+        const statArrFrac = statArr.slice(0, 3).map((el) => el.map(a => toFraction(a)));
+
 const statInfo = [];
 
 for (let i of [0, 1]) {
@@ -283,16 +285,20 @@ for (let i of [0, 1]) {
             array: statArr.map(el => stats.mode(el.slice(indAct[i])))},
         {fname: 'Median', 
             array: statArr.map(el => +stats.median(el.slice(indAct[i])).toFixed(2))},
+        {fname: 'Geometric Mean', 
+            array: statArrFrac.map(el => +toPercent(stats.geometricMean(el.slice(indAct[i]))).toFixed(2))},    
+        {fname: 'Harmonic Mean', 
+            array: statArrFrac.map(el => +toPercent(stats.harmonicMean(el.slice(indAct[i]))).toFixed(2))},    
         {fname: 'Root Mean Square', 
-            array: statArr.map(el => +stats.rootMeanSquare(el.slice(indAct[i])).toFixed(2))},
+            array: statArrFrac.map(el => +toPercent(stats.rootMeanSquare(el.slice(indAct[i]))).toFixed(2))},    
         {fname: 'SampleSkewness', 
             array: statArr.map(el => +stats.sampleSkewness(el.slice(indAct[i])).toFixed(2))},
         {fname: 'Variance', 
-            array: statArr.map(el => +stats.variance(el.slice(indAct[i])).toFixed(2))},
+            array: statArrFrac.map(el => +(10000*stats.variance(el.slice(indAct[i]))).toFixed(2))},
         {fname: 'Standard Deviation', 
-            array: statArr.map(el => +stats.standardDeviation(el.slice(indAct[i])).toFixed(2))},
+            array: statArrFrac.map(el => +(100*stats.standardDeviation(el.slice(indAct[i]))).toFixed(2))},
         {fname: 'MedianAbsoluteDeviation', 
-            array: statArr.map(el => +stats.medianAbsoluteDeviation(el.slice(indAct[i])).toFixed(2))},
+            array: statArrFrac.map(el => +(100*stats.medianAbsoluteDeviation(el.slice(indAct[i]))).toFixed(2))},
         {fname: '% Negative', 
             array: statArr.map(el => +((el.slice(indAct[i])
                                           .sort((a, b) => a - b)
@@ -325,17 +331,21 @@ XLSX.utils.sheet_add_aoa(wsNew, [[stProd.cusip,
    
         const wbNew = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(wbNew, wsNew, stProd.cusip);
-let fileOK = true;
+let fileOK = false;
 let filename = stProd.cusip; 
-if (filename) do {
-    try { XLSX.writeFile(wbNew, __dirname + '\\xlsx\\' + filename + '.xlsx');
+let fullFileName = '';
+if (filename)     
+    while (!fileOK) {
+    fullFileName = __dirname + '\\xlsx\\' + filename + '.xlsx';
+    try { XLSX.writeFile(wbNew,fullFileName);
         fileOK = true;
     } catch {
         filename += '-1';
         fileOK = false;
      }
-} while (!fileOK);
-   return {filename: __dirname + '\\xlsx\\' + filename + '.xlsx', statInfo: statInfo, statArr: statArr};    
+} 
+
+   return {filename: fullFileName, statInfo: statInfo, statArr: statArr};    
 }
 
 //---------------------------------------------------
