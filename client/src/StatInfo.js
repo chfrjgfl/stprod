@@ -2,15 +2,22 @@ import React, { useState } from 'react';
 import ReactDOM from 'react-dom/client';
 import './StatInfo.css';
 import { Chart } from "react-google-charts";
+import ReactSlider from "react-slider";
 
 
 function StatInfo (props) {
-    const { statInfo } = props;
+    const { statInfo, statArr } = props.data;
+    // const statArr = arrSort(props.data.statArr.slice());
     const [mode, setMode] = useState('0');
+    const [sliderValue, setSliderValue] = useState (0);
+    const [worthIt, setWorthIt] = useState ({val: 0, arr: statInfo[mode]
+                          .filter(el => el.fname === '% Negative')[0].array.slice(0, 3)});
 
     const wide = statInfo[0][statInfo[0].length-1].array.length > 3;
     const wMode = wide? "100%": "400px";
     const percentiles = [10, 20, 30, 40, 50, 60, 70, 80, 83.35, 90, 100];
+    const maxSlider = Math.floor(Math.max.apply(null, statInfo[mode].filter(el => el.fname === '90th Percentile')[0].array));
+    // const worthIt = {val: 0, arr:[0, 0, 0]};
 
     const chartOptions = {
       chartArea: { width: "90%",
@@ -28,9 +35,20 @@ function StatInfo (props) {
       
     }
 
+    function setStatArrValue (v) {
+      worthIt.val = v;
+      worthIt.arr[0] = v;
+    }
+
     function handleChange(event) {
       setMode(event.target.value);
+      setWorthIt({val: sliderValue, 
+        arr: statArr[mode].slice(0, 3).map(el => ((el.reduce((a, b) => {if(b > sliderValue) {a++;}return a;}, 0) * 100/el.length).toFixed(2)))})
    }
+
+   function arrSort(arr) {
+    return arr.slice().map(el => el.map(e => e.sort((a, b) => a - b)));
+}
 
     return (
       <>
@@ -68,8 +86,37 @@ function StatInfo (props) {
                 <td>{a}</td>))}  
             </tr>
           ))}
+
+          <tr key='sl'>
+            <td>% Return &gt; {worthIt.val} %</td>
+            {worthIt.arr.map(el => <td>{el}</td>)}
+          </tr>
+
         </tbody>
       </table>
+
+<div className='slider-container'>
+     <div><ReactSlider 
+        className="customSlider"
+        trackClassName="customSlider-track"
+        thumbClassName="customSlider-thumb"
+        max={maxSlider}
+        defaultValue={0}
+        value={sliderValue}
+        onChange={(value) => setSliderValue(value)}
+        onAfterChange = {(value) => setWorthIt({val: value, 
+                          arr: statArr[mode].slice(0, 3)
+                          .map(el => ((el
+                              .reduce((a, b) => {
+                                  if(b > value) {a++;}
+                                  return a;}, 0) * 100/el.length).toFixed(2)))})}
+        // renderThumb={(props, state) => <div {...props}>{state.valueNow}</div>}
+      /> </div><div> {sliderValue}</div>
+</div>
+
+
+{/* array: statArr[mode].map(el => ((el.reduce((a, b) => {if(b > sliderValue) {a++;}return a;}, 0) * 100/el.length).toFixed(2)) */}
+
 
       <Chart
       // className = "donut"
@@ -96,7 +143,7 @@ function StatInfo (props) {
       height="auto"
       
       data={[["Prod", "Outperforms"]].concat(['StProd ', 'IndBlend ', 'Bond ']
-            .map((el, ind) => ([el, statInfo[+mode].filter(el => el.fname === '% Negative')[0].array[ind]])))}
+            .map((el, ind) => ([el, statInfo[mode].filter(el => el.fname === '% Negative')[0].array[ind]])))}
       options={{
         title: "% Negative",
         pieHole: 0.4,
@@ -104,6 +151,29 @@ function StatInfo (props) {
         // chartArea:{left:0,width:'50%',height:'75%'}
       }}
     />
+
+{/* <Chart
+      // className = "donut"
+      key={worthIt.val}
+      chartType="PieChart"
+       width = "400px"
+      height="auto"
+      
+      // data={[["Prod", "Outperforms"]].concat(['StProd ', 'IndBlend ', 'Bond ']
+      //       .map((el, ind) => ([el, worthIt.arr[ind]])))}
+
+      data={[["Prod", "Outperforms"],
+            ['StProd ', worthIt.arr[0]],
+            ['IndBlend ', worthIt.arr[1]],
+            ['Bond ', worthIt.arr[2]] 
+          ]}
+      options={{
+        title: "% Above",
+        pieHole: 0.4,
+        is3D: false,
+        // chartArea:{left:0,width:'50%',height:'75%'}
+      }}
+    /> */}
 
 <Chart
       chartType="LineChart"

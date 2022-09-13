@@ -134,7 +134,7 @@ const prodTypes = [{key:'A', type: 'Coupon'}, {key: 'B', type: 'Growth'}];
           {(this.state.statInfo.length > 0) && <>
             <div className = "tablediv">
 
-                <StatInfo statInfo = {this.state.statInfo} />
+                <StatInfo data = {this.state} />
                 
             </div>
 

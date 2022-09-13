@@ -47,7 +47,7 @@ function Graphs (props) {
     <fieldset className = "graph">
       <legend> Graphs </legend>
 
-      {statArr.slice(0, 3).map((ar, i) => (                                
+      {statArr[0].slice(0, 3).map((ar, i) => (                                
 
            <Chart
                 chartType="Histogram"
@@ -81,7 +81,7 @@ function Graphs (props) {
       width="auto"
       height="400px"
       data={[['StProd', 'IndBlend', 'Bond']]
-              .concat(statArr[0].map((el, ind) => [statArr[0][ind], statArr[1][ind], statArr[2][ind]]))}
+              .concat(statArr[0][0].map((el, ind) => [statArr[0][0][ind], statArr[0][1][ind], statArr[0][2][ind]]))}
       options={{
         // Material design options
         chart: {
@@ -105,7 +105,7 @@ function Graphs (props) {
       }}
     />    
 
-{statArr.slice(3).map((ar, i) => (                                
+{statArr[0].slice(3).map((ar, i) => (                                
 
 <Chart
      chartType="Histogram"

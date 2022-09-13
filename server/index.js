@@ -346,10 +346,15 @@ if (filename)
      }
 } 
 
-   return {filename: fullFileName, statInfo: statInfo, statArr: statArr};    
+   return {filename: fullFileName, statInfo: statInfo, statArr: [statArr, statArr.map(el => el.slice(indAct[1]))]};    
 }
 
 //---------------------------------------------------
+
+function arrSort(arr) {
+    return qqq = arr.map(el => el.map(e => e.sort((a, b) => a - b)));
+}
+
 function toFraction(percent) {
     percent = percent || 0;
     return 1 + percent/100;
