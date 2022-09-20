@@ -151,7 +151,7 @@ function calcRTPs (stProd, histData) {
    
     const wsNew = XLSX.utils.aoa_to_sheet([outputHeader]);
   
-    for (let i=histData.start[0]; i<histLen-term; i++) {        //от начала первого из индексов
+    for (let i=histData.start[0]; i<=histLen-term; i++) {        //от начала первого из индексов
         let t = Math.min(term, histLen-i);          // длительность периода
 
         const o = {
@@ -268,6 +268,9 @@ o.bondReturn = +toPercent(toFraction(histData.bondArray[i + o.lifeInMonths-1])/t
 
         const statArrFrac = statArr.slice(0, 3).map((el) => el.map(a => toFraction(a)));
 
+        const statArrSorted = indAct.map(ind => statArr.map((el) => el.slice(ind).sort((a, b) => a - b)));
+        const aboveArr = [];
+
 const statInfo = [];
 
 for (let i of [0, 1]) {
@@ -308,12 +311,17 @@ for (let i of [0, 1]) {
 
     ];
 
+    let max90;
+    const br = []; 
+
     for(let m = 1; m < 11; m ++) {            
         ar.push({fname: m + '0th Percentile', array: statArr.map(el => +stats.quantile(el.slice(indAct[i]), m/10).toFixed(2))});
                 
         if(m == 8) {
             ar.push({fname: '83.35th Percentile', array: statArr.map(el => stats.quantile(el.slice(indAct[i]), 0.8335))});
         }  
+
+        if(m == 9) max90 = Math.max.apply(null, ar[ar.length-1].array.slice(0, 3))/20;
                     
     }  
 
@@ -322,7 +330,16 @@ for (let i of [0, 1]) {
     }
 
     statInfo.push(ar);
+
+    for (let j=0; j<21; j++) {
+        let m = Math.ceil(j*max90);
+        br.push([m].concat(statArrSorted[i].slice(0, 3).map(a => +((1 - findI(a, m)/a.length)*100).toFixed(2))));
+    }
+    aboveArr.push(br); 
 }
+
+
+
  
 XLSX.utils.sheet_add_aoa(wsNew, [[stProd.cusip, 
                                 stProd['American/European'],
@@ -346,10 +363,18 @@ if (filename)
      }
 } 
 
-   return {filename: fullFileName, statInfo: statInfo, statArr: [statArr, statArr.map(el => el.slice(indAct[1]))]};    
+   return {filename: fullFileName, statInfo: statInfo, 
+            statArr: [statArr, statArr.map(el => el.slice(indAct[1]))], 
+            aboveArr: aboveArr};    
 }
 
 //---------------------------------------------------
+
+function findI (arr, m) {
+    let x = arr.findIndex(el => el > m);
+    if (x == -1) x = arr.length;
+    return x;
+}
 
 function arrSort(arr) {
     return qqq = arr.map(el => el.map(e => e.sort((a, b) => a - b)));

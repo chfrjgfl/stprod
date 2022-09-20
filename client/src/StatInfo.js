@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import ReactDOM from 'react-dom/client';
+//import ReactDOM from 'react-dom/client';
 import './StatInfo.css';
 import { Chart } from "react-google-charts";
 import ReactSlider from "react-slider";
 
 
 function StatInfo (props) {
-    const { statInfo, statArr } = props.data;
+    const { statInfo, statArr, aboveArr } = props.data;
     // const statArr = arrSort(props.data.statArr.slice());
     const [mode, setMode] = useState('0');
     const [sliderValue, setSliderValue] = useState (0);
@@ -14,24 +14,27 @@ function StatInfo (props) {
                           .filter(el => el.fname === '% Negative')[0].array.slice(0, 3)});
 
     const wide = statInfo[0][statInfo[0].length-1].array.length > 3;
-    const wMode = wide? "100%": "400px";
-    const percentiles = [10, 20, 30, 40, 50, 60, 70, 80, 83.35, 90, 100];
+    //const wMode = wide? "100%": "400px";
+    const percentiles = [10, 20, 30, 40, 50, 60, 70, 80, 83.35, 90];
     const maxSlider = Math.floor(Math.max.apply(null, statInfo[mode].filter(el => el.fname === '90th Percentile')[0].array));
     // const worthIt = {val: 0, arr:[0, 0, 0]};
 
+
     const chartOptions = {
-      chartArea: { width: "90%",
+      width: "100%",
+      chartArea: { //width: "85%",
                             height: "auto", 
                             backgroundColor: "beige",
-                            left: 10,
+                            left: 50,
+                            right: 10,
                           },
-      hAxis: {
-        title: "Percentile",
-      },
-      
+            
       legend:{
         position: "bottom",
-      }
+      },
+      lineWidth: 3,
+      crosshair: { trigger: 'both' },
+      focusTarget: 'category', 
       
     }
 
@@ -46,9 +49,9 @@ function StatInfo (props) {
         arr: statArr[mode].slice(0, 3).map(el => ((el.reduce((a, b) => {if(b > sliderValue) {a++;}return a;}, 0) * 100/el.length).toFixed(2)))})
    }
 
-   function arrSort(arr) {
-    return arr.slice().map(el => el.map(e => e.sort((a, b) => a - b)));
-}
+//    function arrSort(arr) {
+//     return arr.slice().map(el => el.map(e => e.sort((a, b) => a - b)));
+// }
 
     return (
       <>
@@ -71,9 +74,9 @@ function StatInfo (props) {
                        <th> IndexBlend TR </th>
                        <th> Bond TR </th>           
                 { wide && <>
-                        <th> CoupMissed </th> 
-                        <th> CoupPaid </th> 
-                        <th> LifeInMonths </th> 
+                        <th> C.Miss. </th> 
+                        <th> C.Paid </th> 
+                        <th> Life, Mnts </th> 
                         </>
             }
           </tr>
@@ -87,15 +90,15 @@ function StatInfo (props) {
             </tr>
           ))}
 
-          <tr key='sl'>
+          {/* <tr key='sl'>
             <td>% Return &gt; {worthIt.val} %</td>
             {worthIt.arr.map(el => <td>{el}</td>)}
-          </tr>
+          </tr> */}
 
         </tbody>
       </table>
 
-<div className='slider-container'>
+{/* <div className='slider-container'>
      <div><ReactSlider 
         className="customSlider"
         trackClassName="customSlider-track"
@@ -112,7 +115,7 @@ function StatInfo (props) {
                                   return a;}, 0) * 100/el.length).toFixed(2)))})}
         // renderThumb={(props, state) => <div {...props}>{state.valueNow}</div>}
       /> </div><div> {sliderValue}</div>
-</div>
+</div> */}
 
 
 {/* array: statArr[mode].map(el => ((el.reduce((a, b) => {if(b > sliderValue) {a++;}return a;}, 0) * 100/el.length).toFixed(2)) */}
@@ -183,11 +186,40 @@ function StatInfo (props) {
       // style={{display:inline-block}}
       height="500px"
       data={[
+        ["%Return > x %", 'StProd', 'IndBlend', 'Bond']
+            ].concat(aboveArr[mode])}
+      options={{...chartOptions, hAxis: {
+        title: "%Return > x %",
+        
+            },
+            vAxis: {
+              title: "Frequency %",
+            },
+    }}
+    />
+
+<Chart
+      chartType="LineChart"
+      key={wide+1}
+      //  width = {wide? "100%": "400px"}
+      width="100%"
+      // style={{display:inline-block}}
+      height="500px"
+      data={[
         ["Percentile", 'StProd', 'IndBlend', 'Bond'],
-        [0].concat(statInfo[+mode].filter(el => el.fname === 'Minimum')[0].array.slice(0, 3))
+        // [0].concat(statInfo[+mode].filter(el => el.fname === 'Minimum')[0].array.slice(0, 3))
             ].concat(percentiles.map(p => [p].concat(statInfo[+mode]
                         .filter(el => el.fname.includes(p))[0].array.slice(0, 3))))}
-      options={chartOptions}
+      options={{...chartOptions, hAxis: {
+        title: "Percentile",
+        // gridlines: { color: '#555', 
+        //     count: 3, interval: [0, 20] },
+        ticks: percentiles   
+      },
+       vAxis: {title: "Return %",
+      // baseline: 83.35
+    },
+        }}  
     />
 
     </fieldset>

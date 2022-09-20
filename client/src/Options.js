@@ -1,8 +1,8 @@
 import React from 'react';
-import ReactDOM from 'react-dom/client';
+//import ReactDOM from 'react-dom/client';
 import './Options.css';
 //import axios from 'axios';
-import { read, utils, writeFile } from 'xlsx';
+//import { read, utils, writeFile } from 'xlsx';
 import StatInfo from './StatInfo.js';
 import Form from './Form.js';
 import Graphs from './Graphs.js';
@@ -14,8 +14,8 @@ import Graphs from './Graphs.js';
 
 const issuers = ['JPMorgan', 'Glenlivet', 'Rabinovitch'];
 const issuerCredits = ['A', 'B', 'C', 'D'];
-const inds = ['S&P 500', 'NASDAQ 100', 'RUSSELL 2000'];
-const prodTypes = [{key:'A', type: 'Coupon'}, {key: 'B', type: 'Growth'}];
+//const inds = ['S&P 500', 'NASDAQ 100', 'RUSSELL 2000'];
+//const prodTypes = [{key:'A', type: 'Coupon'}, {key: 'B', type: 'Growth'}];
 
 
 
@@ -110,6 +110,10 @@ const prodTypes = [{key:'A', type: 'Coupon'}, {key: 'B', type: 'Growth'}];
             this.setState({
                 statArr: f1.statArr
               });
+
+            this.setState({
+              aboveArr: f1.aboveArr
+            });  
             
 //          })(); 
 

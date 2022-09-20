@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import ReactDOM from 'react-dom/client';
+//import ReactDOM from 'react-dom/client';
 //import './StatInfo.css';
 import './Options.css';
 
@@ -36,9 +36,9 @@ function Form (props) {
         });
       }
 
-    function handleSubmit(event) {
-      props.handleSubmit(opts);
-   }
+//     function handleSubmit(event) {
+//       props.handleSubmit(opts);
+//    }
 
     return (
      
@@ -78,7 +78,7 @@ function Form (props) {
             value = {opts.issuer}
             onChange = {event => handleInputChange(event)}    
         >
-            {issuers.map(item => <option>{item}</option> )}        
+            {issuers.map(item => <option key={item}>{item}</option> )}        
         </select>    
         </label>
 
@@ -202,18 +202,18 @@ function Form (props) {
             value = {opts.indexes}
             onChange = {event => handleMultInputChange(event)}    
         >
-            {inds.map(item => <option >{item}</option> )}        
+            {inds.map(item => <option key={item}>{item}</option> )}        
         </select>    
         </label>
 
         <br/>
-        <label> <span className='mylabel'>
+        <label> <span className='mylabel' key = "inds">            
             {opts.indexes.join(' - ')}
             </span>
         </label>
 
         <br/>
-        <button type="submit" className="mybtn" onClick={event => props.handleSubmit(event, opts)}>Submit</button>
+        <button type="submit" className="mybtn" key = "btn" onClick={event => props.handleSubmit(event, opts)}>Submit</button>
     </form>
     </fieldset>
    
