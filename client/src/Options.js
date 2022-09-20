@@ -88,9 +88,7 @@ const issuerCredits = ['A', 'B', 'C', 'D'];
       handleSubmit = async (event, options) => {
         event.preventDefault();
         alert(JSON.stringify(options));
-        this.setState({
-            options: options
-          });
+        
 //const sss = this.state;
 //       (async() => {
             const f = await fetch("/api", {
@@ -103,6 +101,10 @@ const issuerCredits = ['A', 'B', 'C', 'D'];
         const f1 = await f.json();
             alert (`Results file: ${f1.filename}`);
 
+            this.setState({
+              options: options
+            });
+            
             this.setState({
               statInfo: f1.statInfo
             });

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 //import ReactDOM from 'react-dom/client';
 import './StatInfo.css';
 import { Chart } from "react-google-charts";
-import ReactSlider from "react-slider";
+//import ReactSlider from "react-slider";
 
 
 function StatInfo (props) {
@@ -16,7 +16,7 @@ function StatInfo (props) {
     const wide = statInfo[0][statInfo[0].length-1].array.length > 3;
     //const wMode = wide? "100%": "400px";
     const percentiles = [10, 20, 30, 40, 50, 60, 70, 80, 83.35, 90];
-    const maxSlider = Math.floor(Math.max.apply(null, statInfo[mode].filter(el => el.fname === '90th Percentile')[0].array));
+    //const maxSlider = Math.floor(Math.max.apply(null, statInfo[mode].filter(el => el.fname === '90th Percentile')[0].array));
     // const worthIt = {val: 0, arr:[0, 0, 0]};
 
 
@@ -38,10 +38,10 @@ function StatInfo (props) {
       
     }
 
-    function setStatArrValue (v) {
-      worthIt.val = v;
-      worthIt.arr[0] = v;
-    }
+    // function setStatArrValue (v) {
+    //   worthIt.val = v;
+    //   worthIt.arr[0] = v;
+    // }
 
     function handleChange(event) {
       setMode(event.target.value);
@@ -85,8 +85,8 @@ function StatInfo (props) {
           {statInfo[mode].map((el, ind) => (
             <tr key={ind}>
               <td>{el.fname}</td>
-              {el.array.map(a => (
-                <td>{a}</td>))}  
+              {el.array.map((a, i) => (
+                <td key={i*10}>{a}</td>))}  
             </tr>
           ))}
 

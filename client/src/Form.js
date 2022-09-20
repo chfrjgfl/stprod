@@ -89,7 +89,7 @@ function Form (props) {
             value = {opts.issuerCredit}
             onChange = {event => handleInputChange(event)}    
         >
-            {issuerCredits.map(item => <option>{item}</option> )}
+            {issuerCredits.map(item => <option key={item}>{item}</option> )}
         </select>    
         </label>
 
