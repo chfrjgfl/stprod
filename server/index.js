@@ -150,7 +150,9 @@ function calcRTPs (stProd, histData) {
     const memory = stProd.memory;
    
     const wsNew = XLSX.utils.aoa_to_sheet([outputHeader]);
-  
+    //const startDate = 
+
+
     for (let i=histData.start[0]; i<=histLen-term; i++) {        //от начала первого из индексов
         let t = Math.min(term, histLen-i);          // длительность периода
 
@@ -365,7 +367,8 @@ if (filename)
 
    return {filename: fullFileName, statInfo: statInfo, 
             statArr: [statArr, statArr.map(el => el.slice(indAct[1]))], 
-            aboveArr: aboveArr};    
+            aboveArr: aboveArr,
+            startDate: histData.dates[0]};    
 }
 
 //---------------------------------------------------

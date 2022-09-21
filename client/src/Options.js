@@ -6,6 +6,7 @@ import './Options.css';
 import StatInfo from './StatInfo.js';
 import Form from './Form.js';
 import Graphs from './Graphs.js';
+import Raw from './Raw.js';
 
 
 //import {xparse} from "./nxlsx.js";
@@ -52,6 +53,7 @@ const issuerCredits = ['A', 'B', 'C', 'D'];
           },
             statInfo: [],
             statArr:[],
+            startDate: '',
         };
 
         this.responseState = {
@@ -115,6 +117,10 @@ const issuerCredits = ['A', 'B', 'C', 'D'];
 
             this.setState({
               aboveArr: f1.aboveArr
+            }); 
+
+            this.setState({
+              startDate: f1.startDate
             });  
             
 //          })(); 
@@ -126,6 +132,7 @@ const issuerCredits = ['A', 'B', 'C', 'D'];
     render() {
        
       return (
+      <>  
         <div class="row">
           <div className = "formdiv">
             
@@ -152,7 +159,17 @@ const issuerCredits = ['A', 'B', 'C', 'D'];
             </>
           }
 
-    </div>
+      </div>
+
+      {(this.state.statArr.length > 0) && 
+            <div className = "rawdiv">
+
+            <Raw data = {this.state}/>
+
+            </div>
+           
+          }
+    </>
       );
     }
   }

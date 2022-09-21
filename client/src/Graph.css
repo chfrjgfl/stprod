@@ -3,3 +3,13 @@
     background-color: rgb(55, 67, 228);
     float: left;
 }
+
+.raw {
+    height: auto;
+    padding-bottom: 200px;
+}
+
+/* .rawdiv {
+    background-color: rgb(226, 230, 133);
+    padding-bottom: 200px;
+} */
