@@ -29,7 +29,8 @@ function Raw (props) {
             curveType: "function",
             focusTarget: 'category',
             explorer:{zoomDelta: 1.05,
-              maxZoomOut: 0.95},
+              maxZoomOut: 0.95,
+              maxZoomIn: 3.5,},
             };
         
 
