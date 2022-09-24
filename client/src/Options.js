@@ -122,6 +122,10 @@ const issuerCredits = ['A', 'B', 'C', 'D'];
             this.setState({
               startDate: f1.startDate
             });  
+
+            this.setState({
+              worstArr: f1.worstArr
+            });  
             
 //          })(); 
 

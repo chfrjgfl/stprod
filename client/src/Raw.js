@@ -5,23 +5,34 @@ import { Chart } from "react-google-charts";
 
 function Raw (props) {
 
-        const { statArr, statInfo } = props.data;
+        const { statArr, statInfo, worstArr } = props.data;
 //        const prodType = props.data.options.prodType;
         //const[y,m] = props.data.startDate.split('-')
         const startDate = new Date(props.data.startDate);
 
-        const data = [["Date", "StProd", "IndBlend", "Bond"]]
-                .concat(statArr[0][0].map((el, i) => [calcDate(startDate, i), el, statArr[0][1][i], statArr[0][2][i]]));
+        const data = [["Date", "StProd", "IndBlend", "Bond", "Worst"]]
+                .concat(statArr[0][0].map((el, i) => [calcDate(startDate, i), el, statArr[0][1][i], statArr[0][2][i], worstArr[i]]));
 
         const options = {
             chartArea: { height: "70%", width: "100%", left: "5%",
             
             },
             backgroundColor: "beige",
+            series: {
+              3: {
+                color: "black",
+                lineWidth: 2,
+                lineDashStyle: [2, 2],
+              }
+            },
 
             title:"Performance over rtp's %",
             hAxis: { slantedText: false, 
             format: 'MMM y'},
+            vAxis: {
+              baseline: props.data.options.principalBarrier,
+              baselineColor: "red",
+            },
             //vAxis: { viewWindow: { min: 0, max: 2000 } },
             legend: { position: "bottom" },
             lineWidth: 3,
@@ -54,16 +65,22 @@ function Raw (props) {
           controlType: "ChartRangeFilter",
           options: {
             filterColumnIndex: 0,
+            //height:30,
             ui: {
               chartType: "LineChart",
               chartOptions: {
-                backgroundColor: "pink",
+                //backgroundColor: "pink",
 
                 chartArea: {  height: "50%", 
                 left: "10%", 
                 right: "10%", 
 
                  },  //width: "81%",
+                 series: {
+                  3: {                    
+                    lineWidth: 0,
+                  }
+                },
                 hAxis: { baselineColor: "none" },
               },
             },

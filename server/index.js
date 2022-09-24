@@ -151,7 +151,7 @@ function calcRTPs (stProd, histData) {
    
     const wsNew = XLSX.utils.aoa_to_sheet([outputHeader]);
     //const startDate = 
-
+    const worstArr = [];
 
     for (let i=histData.start[0]; i<=histLen-term; i++) {        //от начала первого из индексов
         let t = Math.min(term, histLen-i);          // длительность периода
@@ -235,7 +235,7 @@ o.bondReturn = +toPercent(toFraction(histData.bondArray[i + o.lifeInMonths-1])/t
 
                        
         XLSX.utils.sheet_add_aoa(wsNew, [fromO], {origin: -1}); 
-
+    worstArr.push(worst);
         res.push(o);
     }
 
@@ -368,7 +368,8 @@ if (filename)
    return {filename: fullFileName, statInfo: statInfo, 
             statArr: [statArr, statArr.map(el => el.slice(indAct[1]))], 
             aboveArr: aboveArr,
-            startDate: histData.dates[0]};    
+            startDate: histData.dates[0],
+            worstArr: worstArr};    
 }
 
 //---------------------------------------------------
