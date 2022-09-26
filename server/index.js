@@ -210,7 +210,7 @@ function calcRTPs (stProd, histData) {
 o.bondReturn = +toPercent(toFraction(histData.bondArray[i + o.lifeInMonths-1])/toFraction(histData.bondArray[i-1])).toFixed(2);
 
         o.indReturnTR = histData.indCumulArray.map(el => (i<el[1][0])? '': 
-                +toPercent(toFraction(el[1][i + o.lifeInMonths-1])/toFraction(el[1][i])).toFixed(2));
+                +toPercent(toFraction(el[1][i + o.lifeInMonths-1])/toFraction(el[1][i-1])).toFixed(2));
         o.activeInds = o.indReturnTR.reduce((a, b) => a += (typeof b === 'number')? 1: 0, 0);
         o.eqIndReturn = +o.indReturnTR.reduce((a,b) => a+(b||0)/o.activeInds, 0).toFixed(2);
 
