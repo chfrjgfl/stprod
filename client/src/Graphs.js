@@ -44,29 +44,41 @@ function findIndexNew(ar, el)  {
   //       // width: "auto"
   //     };
 
-const lastBucket = Math.min(Math.ceil(statInfo[0].find(el => el.fname === '% Negative').array[0]), 5);
+const lastBucket = Math.min(Math.ceil(statInfo[0].find(el => el.fname === '% Negative').array[0]), 2);
+
+const limits =[0, 1, 2].map((i) => {
+                return [statInfo[0].find(el => el.fname === '10th Percentile').array[i]*lastBucket/10 +
+                statInfo[0].find(el => el.fname === 'Minimum').array[i]*(1-lastBucket/10),
+                statInfo[0].find(el => el.fname === 'Maximum').array[i]*(1-lastBucket/10) +
+                statInfo[0].find(el => el.fname === '90th Percentile').array[i]*lastBucket/10]
+              });
+
+if (prodType === 'A') limits[0][1] = statInfo[0].find(el => el.fname === 'Maximum').array[0];
+if (prodType === 'A') limits[0][0] = 0;
+                            
+
 let i = Math.floor(lastBucket*statArr[0][1].length/100);
 const stPtoIndAr = statArr[0][1]                                              //[index, stProd]  sorted by index            
                   .map((el,ind) => [el, statArr[0][0][ind]])  
-                  .sort((a,b) => a[0]-b[0])
-                  .slice(i, -i);                                              // tails cut
+                  .sort((a,b) => a[0]-b[0]);
+                 // .slice(i, -i);                                              // tails cut
 
 const indRange = stPtoIndAr[stPtoIndAr.length-1][0] - stPtoIndAr[0][0];   // ind max - ind min
 const maxIndBins = Math.sqrt(stPtoIndAr.length);                               // bins qty by google charts default
 
-const binw = [1,2,5,10,20,50].find(el => el >= (indRange/(1*maxIndBins)))*(prodType === 'A'? 1: 2); 
+const binw = [1,2,5,10,20,50].find(el => el >= (indRange/maxIndBins))*(prodType === 'A'? 1: 1); 
                          // bin width rounded to 1.25 coup, 2.5 gr
-const histoBuckets = ['', binw, ''];
+const histoBuckets = [prodType === 'A'? 1: binw, binw, ''];
 
-let minBin = Math.floor(statInfo[0].find(el => el.fname === '10th Percentile').array[1]/binw)*binw;  //min & max bins tied 
-const maxBin = Math.ceil(statInfo[0].find(el => el.fname === '90th Percentile').array[1]/binw)*binw; //to 10 & 90 perc.
+let minBin = Math.floor(statInfo[0].find(el => el.fname === 'Minimum').array[1]/binw)*binw;  //min & max bins tied 
+const maxBin = Math.ceil(statInfo[0].find(el => el.fname === 'Maximum').array[1]/binw)*binw; //to 10 & 90 perc.
 
 let steps;
 let stepsArr = [];
 if(prodType === 'B') {
   steps = [];
   let k = Math.floor(statInfo[0].find(el => el.fname === '10th Percentile').array[0]/binw)*binw;
-  let j = Math.ceil(statInfo[0].find(el => el.fname === '90th Percentile').array[1]/binw)*binw;
+  let j = Math.ceil(statInfo[0].find(el => el.fname === '90th Percentile').array[0]/binw)*binw;
   stepsArr.push('< '+k);
   for (let m = k; m<=j; m+=binw) {
     steps.push(m);
@@ -144,21 +156,26 @@ for (let el of dividedArr) {
                 key = {i.toString()}
                 data={[['index', 'return']].concat(ar.map((el, ind) => [ind.toString(), el]))}
                 options={  {title: ['StProd ', 'IndBlend ', 'Bond '][i]+'distribution' ,
-                height: "300px",
+                height: "400px",
                  chartArea: { width: "90%",
-                              height: "300px", 
+                              height: "400px", 
                               backgroundColor: "beige",
                               right: 10,
                             },
                 hAxis: {
                   title: 'Return',  
+                  viewWindow: {max: limits[i][1],   //statInfo[0].find(el => el.fname === '90th Percentile').array[i],
+                            min: limits[i][0],  //statInfo[0].find(el => el.fname === '10th Percentile').array[i],
+                },
+                explorer: {zoomDelta: 1.05,
+                  maxZoomOut: 0.95 },
                 },
                 histogram: {
-                  lastBucketPercentile: lastBucket,
+                  lastBucketPercentile: 0,  //lastBucket,
                   bucketSize: histoBuckets[i],
-                  maxNumBuckets: 60, 
-                  minValue: statInfo[0].find(el => el.fname === '10th Percentile').array[i],
-                  maxValue: statInfo[0].find(el => el.fname === '90th Percentile').array[i],
+                 //maxNumBuckets: 60, 
+                  // minValue: statInfo[0].find(el => el.fname === '10th Percentile').array[i],
+                  // maxValue: statInfo[0].find(el => el.fname === '90th Percentile').array[i],
                 },
                 
               } }         
@@ -173,7 +190,7 @@ for (let el of dividedArr) {
             data={superHistData}
             options={{
               title: "SuperHistogram IndBlend over StProd",
-              chartArea: { width: "60%" },
+              chartArea: { width: "85%" },
               left: 0,
               isStacked: true,
               bar: {
@@ -183,14 +200,18 @@ for (let el of dividedArr) {
                 title: "IndBlend Return %",
                 //minValue: 0,
                 showTextEvery: 1,
+                viewWindow: {max: limits[1][1],   //statInfo[0].find(el => el.fname === '90th Percentile').array[1],
+                            min: limits[1][0],   //statInfo[0].find(el => el.fname === '10th Percentile').array[1],
+                },
               },
               vAxis: {
-                title: "Frequency",
+                //title: "Frequency",
                 //scaleType: 'mirrorLog',
               },
               explorer: {zoomDelta: 1.05,
                           maxZoomOut: 0.95 },
-              legend: {pageIndex: 10},
+              legend: {//pageIndex: 10,
+              position: "bottom",},
               
             }}
           />
