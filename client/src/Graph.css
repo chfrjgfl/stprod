@@ -13,3 +13,23 @@
     background-color: rgb(226, 230, 133);
     padding-bottom: 200px;
 } */
+
+.chkbx {
+    font-family: system-ui;
+    font-weight: bold;
+    font-size: 14px;
+    /* font-color: 'black'; */
+    position:relative;
+    top: -368px;
+    /* left:-100px; */
+    /* background-color: aquamarine; */
+    text-align: right;
+    margin-top: 0;
+    margin-bottom: 0;
+    height: 0;
+}
+
+.check {
+    margin-left: -18px;
+    margin-top: 11px;
+}

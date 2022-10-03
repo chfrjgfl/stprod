@@ -13,9 +13,15 @@ function findIndexNew(ar, el)  {
   if (el > 0) x++;
   return x;
 }
+
+function handleInputChange(event) {
+  const value = event.target.checked;
+  setNorm(value);  
+}
+
     const { statArr, statInfo } = props.data;
     const prodType = props.data.options.prodType;
-    // const [mode, setMode] = useState('0');
+   const [norm, setNorm] = useState(false);
 
   //  const data = [['index', 'return']].concat(statArr[1].map((el, ind) => [ind.toString(), el]));
 
@@ -181,7 +187,9 @@ for (let el of dividedArr) {
               } }         
             />  
             
-            {(i == 0) &&
+            {(i == 0) && <>
+
+            
             <Chart
             key = "sh"
             chartType="ColumnChart"
@@ -192,7 +200,7 @@ for (let el of dividedArr) {
               title: "SuperHistogram IndBlend over StProd",
               chartArea: { width: "85%" },
               left: 0,
-              isStacked: true,
+              isStacked: norm? "percent": "absolute",
               bar: {
                 groupWidth:"93%",
               },
@@ -214,8 +222,20 @@ for (let el of dividedArr) {
               position: "bottom",},
               
             }}
-          />
+          />  
+
+          <p className = "chkbx">Normalized <input
+            className="check" 
+            key="chkbx"
+            type="checkbox"
+            checked={norm}
+            onChange={event => handleInputChange(event)} />
+            </p>
+
+          
+          </>
             }
+
 
         </>
       ))}  

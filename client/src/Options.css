@@ -1,6 +1,6 @@
 body {
     font: 14px "Century Gothic", Futura, sans-serif;
-    margin: 20px;
+    margin: 10px;
   }
 
   .row {
@@ -8,6 +8,9 @@ body {
     width: 100%; */
     display: flex;
     align-items: flex-start;
+    width: 100%;
+    /* flex-wrap: wrap; */
+    background-color: rgb(213, 233, 121);
 }
 
 .formdiv {
@@ -34,12 +37,29 @@ body {
   background-color: rgb(199, 81, 134);
    /* float: none;   так было */
   overflow: auto;
-  width: auto; 
-  margin-right: 0;
+  /* width: auto;  */
+  right: 0;
   border: 1px solid;
   flex-shrink: 2; 
   flex-grow: 1;
+  min-width: 400px;
+  max-width: 50%;
 }  
+
+.rawdiv {
+  background-color: rgb(214, 130, 237);
+   /* float: left;    */
+  /* overflow: auto; */
+  /* width: auto;  */
+  /* margin-right: 5px; */
+  border: 1px solid;
+  flex-grow: 1;
+  flex-shrink: 4; 
+  /* align-self: flex-start; */
+
+  min-width: 700px;
+}
+
 
 fieldset {
   border-radius: 5px;   

@@ -137,7 +137,7 @@ const issuerCredits = ['A', 'B', 'C', 'D'];
        
       return (
       <>  
-        <div class="row">
+        <div className="row">
           <div className = "formdiv">
             
 
@@ -160,9 +160,12 @@ const issuerCredits = ['A', 'B', 'C', 'D'];
                 <Graphs data = {this.state}/>
     
             </div>
+
+            
             </>
           }
-
+   
+         
       </div>
 
       {(this.state.statArr.length > 0) && 
@@ -173,6 +176,7 @@ const issuerCredits = ['A', 'B', 'C', 'D'];
             </div>
            
           }
+
     </>
       );
     }
