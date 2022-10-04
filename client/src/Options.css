@@ -4,8 +4,8 @@ body {
   }
 
   .row {
-    /* overflow: auto;   так было
-    width: 100%; */
+    overflow: hidden;   
+    width: 100%;
     display: flex;
     align-items: flex-start;
     width: 100%;
@@ -36,7 +36,7 @@ body {
 .graphdiv {
   background-color: rgb(199, 81, 134);
    /* float: none;   так было */
-  overflow: auto;
+  /* overflow: auto; */
   /* width: auto;  */
   right: 0;
   border: 1px solid;
@@ -58,6 +58,21 @@ body {
   /* align-self: flex-start; */
 
   min-width: 700px;
+}
+
+.rawdivnarrow {
+  background-color: rgb(214, 130, 237);
+   /* float: left;    */
+  /* overflow: auto; */
+  /* width: auto;  */
+  /* margin-right: 5px; */
+  border: 1px solid;
+  flex-grow: 0;
+  flex-shrink: 4; 
+  /* align-self: flex-start; */
+
+  max-width: 950px;
+  margin-top: -40%;
 }
 
 

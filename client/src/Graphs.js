@@ -19,9 +19,17 @@ function handleInputChange(event) {
   setNorm(value);  
 }
 
+function handleInputChangeM(i) {
+  const updatedScatter = scatter.map((el, ind) =>
+      ind === i ? !el : el
+    );
+  setScatter(updatedScatter);  
+}
+
     const { statArr, statInfo } = props.data;
     const prodType = props.data.options.prodType;
    const [norm, setNorm] = useState(false);
+   const [scatter, setScatter] = useState([true, true]);
 
   //  const data = [['index', 'return']].concat(statArr[1].map((el, ind) => [ind.toString(), el]));
 
@@ -198,7 +206,7 @@ for (let el of dividedArr) {
             data={superHistData}
             options={{
               title: "SuperHistogram IndBlend over StProd",
-              chartArea: { width: "85%" },
+              chartArea: { width: "90%" },
               left: 0,
               isStacked: norm? "percent": "absolute",
               bar: {
@@ -241,35 +249,52 @@ for (let el of dividedArr) {
       ))}  
 
 <Chart
-      chartType="Scatter"
+      chartType="ScatterChart"
       key="sc1"
       width="auto"
       height="400px"
       data={[['StProd', 'IndBlend', 'Bond']]      //'StProd', 'IndBlend', 'Bond'
               .concat(statArr[0][0].map((el, ind) => [statArr[0][0][ind], statArr[0][1][ind], statArr[0][2][ind]]))}
       options={{
-    //     selectionMode: 'multiple',
-    // tooltip: {trigger: 'selection'},
-    // aggregationTarget: 'category',
         chart: {
           title: "Scatter Chart",
         },
-        explorer: {zoomDelta: 1.05,
-          maxZoomOut: 1 },
-          pointSize: 4,
+        pointSize: 4,
         chartArea: { width: "90%",
-                              height: "auto", 
-                              backgroundColor: "beige",
+                              height: "80%", 
                               right: 10,
+                              backgroundColor: "beige",
+                              // right: 10,
                             },
         series: {
-          0: { axis: "Ind Blend" },
-          1: { axis: "Bond" },
+          0: { axis: "Ind Blend", pointsVisible: scatter[0] },
+          1: { axis: "Bond", pointsVisible: scatter[1] },
         },
+        hAxis: {
+          title: 'StProd Return  %',  
+        },
+        legend: {
+          position: "none",},
         
       }}
       
     />    
+
+
+           
+            {scatter.map((e, i) => (
+            <p className = {"scat-chkbx-"+i}>
+            <input
+             
+            key={"c"+i}
+            type="checkbox"
+            checked={e}
+            // name= {['IndBlend', 'Bond'][i]}
+            onChange={() => handleInputChangeM(i)} />
+            <label className="radiolabel" >{['IndBlend', 'Bond'][i]}</label></p>
+          
+             ))}
+           
 
 {statArr[0].slice(4).map((ar, i) => (                                
 

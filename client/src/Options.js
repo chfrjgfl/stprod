@@ -169,7 +169,7 @@ const issuerCredits = ['A', 'B', 'C', 'D'];
       </div>
 
       {(this.state.statArr.length > 0) && 
-            <div className = "rawdiv">
+            <div className = {this.state.options.prodType === 'A'? "rawdivnarrow": "rawdiv"}>
 
             <Raw data = {this.state}/>
 

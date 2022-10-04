@@ -17,7 +17,7 @@
 .chkbx {
     font-family: system-ui;
     font-weight: bold;
-    font-size: 14px;
+    font-size: 12px;
     /* font-color: 'black'; */
     position:relative;
     top: -368px;
@@ -32,4 +32,49 @@
 .check {
     margin-left: -18px;
     margin-top: 11px;
+}
+
+.scat-chkbx-0 {
+    position:relative;
+    top: -390px; 
+    left: 40px; 
+    margin-top: 0;
+    margin-bottom: 0;
+    height: 0; 
+    /* width: 100%; */
+    font-family: system-ui;
+    font-weight: bold;
+    font-size: 12px; 
+    color: blue;
+}
+
+.scat-chkbx-1 {
+    position:relative;
+    top: -390px; 
+    left: 140px;
+    margin-top: 0;
+    margin-bottom: 0;
+    height: 0; 
+    font-family: system-ui;
+    font-weight: bold;
+    font-size: 12px; 
+    color: red;
+}
+
+.check-div{
+    margin-top: 0;
+    margin-bottom: 0;
+    height: 0; 
+}
+
+.label-0 {
+    font-family: system-ui;
+    font-weight: bold;
+    font-size: 12px;  
+}
+
+.label-1 {
+    font-family: system-ui;
+    font-weight: bold;
+    font-size: 12px;  
 }
