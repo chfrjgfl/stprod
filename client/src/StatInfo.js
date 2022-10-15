@@ -134,6 +134,7 @@ function StatInfo (props) {
         title: "Outperforming Product",
         pieHole: 0.4,
         is3D: false,
+        pieSliceTextStyle: {color: 'black', },
         // chartArea:{left:0,width:'50%',height:'75%'}
       }}
     />
@@ -141,42 +142,19 @@ function StatInfo (props) {
 <Chart
       // className = "donut"
       key="d2"
-      chartType="PieChart"
+      chartType="BarChart"
        width = "400px"
       height="auto"
       
-      data={[["Prod", "Outperforms"]].concat(['StProd ', 'IndBlend ', 'Bond ']
-            .map((el, ind) => ([el, statInfo[mode].filter(el => el.fname === '% Negative')[0].array[ind]])))}
+      data={[["Prod", "% Negative", { role: "style" }]].concat(['StProd ', 'IndBlend ', 'Bond ']
+            .map((el, ind) => ([el, statInfo[mode].find(el => el.fname === '% Negative').array[ind],
+                  ['navyblue', 'red', 'orange'][ind]])))}
       options={{
         title: "% Negative",
-        pieHole: 0.4,
-        is3D: false,
-        // chartArea:{left:0,width:'50%',height:'75%'}
+        legend: {position: 'none'}
       }}
     />
 
-{/* <Chart
-      // className = "donut"
-      key={worthIt.val}
-      chartType="PieChart"
-       width = "400px"
-      height="auto"
-      
-      // data={[["Prod", "Outperforms"]].concat(['StProd ', 'IndBlend ', 'Bond ']
-      //       .map((el, ind) => ([el, worthIt.arr[ind]])))}
-
-      data={[["Prod", "Outperforms"],
-            ['StProd ', worthIt.arr[0]],
-            ['IndBlend ', worthIt.arr[1]],
-            ['Bond ', worthIt.arr[2]] 
-          ]}
-      options={{
-        title: "% Above",
-        pieHole: 0.4,
-        is3D: false,
-        // chartArea:{left:0,width:'50%',height:'75%'}
-      }}
-    /> */}
 
 <Chart
       chartType="LineChart"

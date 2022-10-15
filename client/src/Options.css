@@ -34,7 +34,7 @@ body {
 }
 
 .graphdiv {
-  background-color: rgb(199, 81, 134);
+  background-color: rgb(199, 199, 205);
    /* float: none;   так было */
   /* overflow: auto; */
   /* width: auto;  */
@@ -47,7 +47,7 @@ body {
 }  
 
 .rawdiv {
-  background-color: rgb(214, 130, 237);
+  background-color: rgb(11, 240, 130);
    /* float: left;    */
   /* overflow: auto; */
   /* width: auto;  */

@@ -132,14 +132,26 @@ while(minBin <= maxBin) {
 if(prodType === 'A') stepsArr = Array.from(steps).sort((a, b) => a - b).map(el => (el).toString());     // for coupon.   stepsArr must be declared above
 // if 'A'
 
-const superHistData = [["Return of IndBlend %"].concat(stepsArr)];
+const superHistData = [["Return of IndBlend %"].concat(stepsArr.map(e=>[e,{ role: 'style' }]).flat())];  //here
 for (let el of dividedArr) {
-  const ar = Array(stepsArr.length+1).fill(0)
-  ar[0] = el[0]+binw;
+  const ar = [el[0]+binw].concat(stepsArr.map(e=>[0,'']).flat());    //here
+  //const ar = Array(2*stepsArr.length+1).fill(0);             //here
+  //ar[0] = el[0]+binw;
   
   for(let a of el[1]) {
     let i = prodType === 'A'? stepsArr.indexOf(a[0].toString()): a[0];
-    ar[i+1] = a[1];
+    
+    ar[2*i+1] = a[1];  
+     
+    let z = prodType === 'A'? 0: stepsArr.indexOf('0');
+    let mul = prodType === 'A'? a[0] < 0? -1: Math.floor(120/(+stepsArr[stepsArr.length-1])): 
+                              Math.floor(120/stepsArr.length);
+    let x = prodType === 'A'? 1: binw;
+    let c = a[0] < z? [30+Math.floor(mul*a[0]), 0, 250]: 
+                a[0] == z? [222, 222, 222]:
+                  (a[0]-z)*x < ar[0]? [0, 250, 30+Math.floor(mul*a[0])]:
+                    [250, 30+Math.floor(mul*a[0]), 0]                          //here
+    ar[2*i+2] = `color: rgb(${c[0]}, ${c[1]}, ${c[2]})`;
   }
 
   superHistData.push(ar);
