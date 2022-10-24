@@ -26,7 +26,7 @@ function handleInputChangeM(i) {
   setScatter(updatedScatter);  
 }
 
-    const { statArr, statInfo } = props.data;
+    const { statArr, statInfo } = props.data.data;
     const prodType = props.data.options.prodType;
    const [norm, setNorm] = useState(false);
    const [scatter, setScatter] = useState([true, true]);
@@ -85,7 +85,7 @@ const binw = [1,2,5,10,20,50].find(el => el >= (indRange/maxIndBins))*(prodType 
 const histoBuckets = [prodType === 'A'? 1: binw, binw, ''];
 
 let minBin = Math.floor(statInfo[0].find(el => el.fname === 'Minimum').array[1]/binw)*binw;  //min & max bins tied 
-const maxBin = Math.ceil(statInfo[0].find(el => el.fname === 'Maximum').array[1]/binw)*binw; //to 10 & 90 perc.
+const maxBin = Math.ceil(statInfo[0].find(el => el.fname === 'Maximum').array[1]/binw)*binw; //to 0 & 100 perc.
 
 let steps;
 let stepsArr = [];
@@ -114,7 +114,7 @@ const dividedArr = [];                                    // bins of index
 while(minBin <= maxBin) {
   let spBinArr = stPtoIndAr                             //stProd inside every bin of index, sorted
                 .splice(0, stPtoIndAr.findIndex(el => el[0] >= minBin + binw))
-                .map(el => prodType === 'A'? el[1]: findIndexNew(steps, el[1]))             //must be bin number for growth prod.
+                .map(el => prodType === 'A'? el[1] < 0? -1: el[1]: findIndexNew(steps, el[1]))             //must be bin number for growth prod.
                 .sort((a, b) => a - b);
   //i = 1;
   let ar = [];                          // [ [step or bin number, qty]  ]. sorted
@@ -149,7 +149,7 @@ for (let el of dividedArr) {
     let x = prodType === 'A'? 1: binw;
     let c = a[0] < z? [30+Math.floor(mul*a[0]), 0, 250]: 
                 a[0] == z? [222, 222, 222]:
-                  (a[0]-z)*x < ar[0]? [0, 250, 30+Math.floor(mul*a[0])]:
+                  (a[0]-z)*x < ar[0]? [0, 200, 30+Math.floor(mul*a[0])]:
                     [250, 30+Math.floor(mul*a[0]), 0]                          //here
     ar[2*i+2] = `color: rgb(${c[0]}, ${c[1]}, ${c[2]})`;
   }
@@ -157,15 +157,7 @@ for (let el of dividedArr) {
   superHistData.push(ar);
 }
 
-                                                       //props.data.options.couponLow/12
-
-
-//props.data.options.prodType == 'A'?       :2
-  // function changeValue(o, key, value) {
-  //   const oo = Object.assign(o);
-  //   oo[key] = value;
-  //   return oo;
-  // }
+ if (prodType === 'A') superHistData[0][1] = '<0';
 
     return (
       <>
@@ -222,7 +214,7 @@ for (let el of dividedArr) {
               left: 0,
               isStacked: norm? "percent": "absolute",
               bar: {
-                groupWidth:"93%",
+                groupWidth:"90%",
               },
               hAxis: {
                 title: "IndBlend Return %",
@@ -239,7 +231,7 @@ for (let el of dividedArr) {
               explorer: {zoomDelta: 1.05,
                           maxZoomOut: 0.95 },
               legend: {//pageIndex: 10,
-              position: "bottom",},
+              position: "none",},
               
             }}
           />  

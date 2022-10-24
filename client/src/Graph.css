@@ -6,13 +6,15 @@
 
 .raw {
     height: auto;
-    padding-bottom: 200px;
+    padding-bottom: 370px;
+    /* padding-top:170px; */
 }
 
-/* .rawdiv {
-    background-color: rgb(226, 230, 133);
-    padding-bottom: 200px;
-} */
+ .rawdiv {
+    position: relative;
+    background-color: rgb(38, 178, 193);
+    /* top: 150px; */
+} 
 
 .chkbx {
     font-family: system-ui;

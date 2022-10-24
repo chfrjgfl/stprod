@@ -6,12 +6,12 @@ import { Chart } from "react-google-charts";
 
 
 function StatInfo (props) {
-    const { statInfo, statArr, aboveArr } = props.data;
+    const { statInfo, statArr, aboveArr } = props.data.data;
     // const statArr = arrSort(props.data.statArr.slice());
     const [mode, setMode] = useState('0');
     const [sliderValue, setSliderValue] = useState (0);
     const [worthIt, setWorthIt] = useState ({val: 0, arr: statInfo[mode]
-                          .filter(el => el.fname === '% Negative')[0].array.slice(0, 3)});
+                          .find(el => el.fname === '% Negative').array.slice(0, 3)});
 
     const wide = statInfo[0][statInfo[0].length-1].array.length > 3;
     //const wMode = wide? "100%": "400px";
@@ -38,20 +38,12 @@ function StatInfo (props) {
       
     }
 
-    // function setStatArrValue (v) {
-    //   worthIt.val = v;
-    //   worthIt.arr[0] = v;
-    // }
-
+   
     function handleChange(event) {
       setMode(event.target.value);
       setWorthIt({val: sliderValue, 
         arr: statArr[mode].slice(0, 3).map(el => ((el.reduce((a, b) => {if(b > sliderValue) {a++;}return a;}, 0) * 100/el.length).toFixed(2)))})
    }
-
-//    function arrSort(arr) {
-//     return arr.slice().map(el => el.map(e => e.sort((a, b) => a - b)));
-// }
 
     return (
       <>
@@ -98,29 +90,6 @@ function StatInfo (props) {
         </tbody>
       </table>
 
-{/* <div className='slider-container'>
-     <div><ReactSlider 
-        className="customSlider"
-        trackClassName="customSlider-track"
-        thumbClassName="customSlider-thumb"
-        max={maxSlider}
-        defaultValue={0}
-        value={sliderValue}
-        onChange={(value) => setSliderValue(value)}
-        onAfterChange = {(value) => setWorthIt({val: value, 
-                          arr: statArr[mode].slice(0, 3)
-                          .map(el => ((el
-                              .reduce((a, b) => {
-                                  if(b > value) {a++;}
-                                  return a;}, 0) * 100/el.length).toFixed(2)))})}
-        // renderThumb={(props, state) => <div {...props}>{state.valueNow}</div>}
-      /> </div><div> {sliderValue}</div>
-</div> */}
-
-
-{/* array: statArr[mode].map(el => ((el.reduce((a, b) => {if(b > sliderValue) {a++;}return a;}, 0) * 100/el.length).toFixed(2)) */}
-
-
       <Chart
       // className = "donut"
       key = "d1"
@@ -129,7 +98,7 @@ function StatInfo (props) {
       height="auto"
       
       data={[["Prod", "Outperforms"]].concat(['StProd ', 'IndBlend ', 'Bond ']
-            .map((el, ind) => ([el, statInfo[mode].filter(el => el.fname === '% Outperforms')[0].array[ind]])))}
+            .map((el, ind) => ([el, statInfo[mode].find(el => el.fname === '% Outperforms').array[ind]])))}
       options={{
         title: "Outperforming Product",
         pieHole: 0.4,

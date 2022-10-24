@@ -5,13 +5,16 @@ import { Chart } from "react-google-charts";
 
 function Raw (props) {
 
-        const { statArr, statInfo, worstArr } = props.data;
+        const { statArr, statInfo, worstArr, histPRArr } = props.data.data;
+        const indexes = props.data.options.indexes;
 //        const prodType = props.data.options.prodType;
         //const[y,m] = props.data.startDate.split('-')
-        const startDate = new Date(props.data.startDate);
+        const startDate = new Date(props.data.data.startDate);
 
         const data = [["Date", "StProd", "IndBlend", "Bond", "Worst"]]
                 .concat(statArr[0][0].map((el, i) => [calcDate(startDate, i), el, statArr[0][1][i], statArr[0][2][i], worstArr[i]]));
+        const histData = [["Date"].concat(indexes)]
+                .concat(histPRArr[0].map((el, i) => [calcDate(startDate, i), el, histPRArr[1][i], histPRArr[2][i]]));
 
         const options = {
             chartArea: { height: "70%", width: "100%", left: "5%",
@@ -68,6 +71,7 @@ function Raw (props) {
             //height:30,
             ui: {
               chartType: "LineChart",
+             
               chartOptions: {
                 //backgroundColor: "pink",
 
@@ -97,7 +101,77 @@ function Raw (props) {
         },
       ]}
     />
+
+{/* <div className='rawdiv'> */}
+<Chart
+// className='rawdiv'
+      chartType="LineChart"
+      key = "r2"
+      width="100%"
+      height="400px"
+      style={{position:"relative", top:"80px"}}
+      
+     // left = "20%"
+      data={histData}
+      options={{...options,
+        title:"Underlying indexes, monthly",
+        vAxis: {
+          baseline: 0,
+          baselineColor: "black",
+        },
+      }}
+      chartPackages={["corechart", "controls"]}
+
+      render={({ renderControl, renderChart }) => {
+        return (
+          <div style={{  }}>
+            <div style={{ width: "100%",height:"400px" }}>{renderChart()}</div>
+            <div style={{ position:"relative",width: "100%", height:"50%", top:"80px" }}>{renderControl(() => true)}</div>
             
+          </div>
+        );
+      }}
+
+      controls={[
+        {
+          controlType: "ChartRangeFilter",
+          position:"relative", top:"80px",
+          options: {
+            filterColumnIndex: 0,
+            //height:30,
+            ui: {
+              chartType: "LineChart",
+              chartOptions: {
+                //backgroundColor: "pink",
+
+                chartArea: {  height: "50%", 
+                
+                left: "10%", 
+                right: "10%", 
+
+                 },  //width: "81%",
+                 series: {
+                  3: {                    
+                    lineWidth: 0,
+                  }
+                },
+                hAxis: { baselineColor: "none" },
+              },
+            },
+          },
+          controlPosition: "bottom",
+          controlWrapperParams: {
+            state: {
+              range: {
+                start: new Date(1997, 1, 1),
+                end: new Date(2002, 2, 1),
+              },
+            },
+          },
+        },
+      ]}
+    />
+      {/* </div>       */}
             {/* </div>         */}
             
             </fieldset>

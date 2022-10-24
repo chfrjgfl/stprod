@@ -117,6 +117,7 @@ function getHistData(file, inds) {
 //-------------------------------------------------
 function calcRTPs (stProd, histData) {
 
+    const pType = stProd.prodType;
     const outputHeader = [
         'CUSIP',
         'American/European',
@@ -127,7 +128,7 @@ function calcRTPs (stProd, histData) {
                         ['StProd(w/crnt-terms)',
                         'Ind Blend TR',
                         'Bond TR'],
-            stProd.prodType === 'A'?['NumberMissedCoupons',
+                        pType === 'A'?['NumberMissedCoupons',
                         'NumberCouponPaid',
                         'LifeInMonths',
                         'Called Date']: [],
@@ -148,12 +149,13 @@ function calcRTPs (stProd, histData) {
     const couponLow = stProd.couponLow;
     const couponBarrier = stProd.couponBarrier;//-100);//*100;
     const memory = stProd.memory;
-   
+    
     const wsNew = XLSX.utils.aoa_to_sheet([outputHeader]);
     //const startDate = 
     const worstArr = [];
-
-    for (let i=histData.start[0]; i<=histLen-term; i++) {        //от начала первого из индексов
+    const term0 = pType == 'A'? callPrMonths: term;
+    
+    for (let i=histData.start[0]; i<=histLen-term0; i++) {        //от начала первого из индексов
         let t = Math.min(term, histLen-i);          // длительность периода
 
         const o = {
@@ -162,7 +164,7 @@ function calcRTPs (stProd, histData) {
             couponMissed:0,
             called: false,
             matured: false,
-            lifeInMonths: stProd.prodType === 'A'? t: +term,
+            lifeInMonths: pType === 'A'? t: +term,
             eqIndReturn: 0,
             indReturnPR:[],
             indReturnTR:[],
@@ -173,13 +175,13 @@ function calcRTPs (stProd, histData) {
         let worst;
               
         for (let j=i+callPrMonths-1; j<i+t; j++) {    // from callPr till endDate - RTP for stProd
-            if (stProd.prodType === 'B') j = i+t-1;      
+            if (pType === 'B') j = i+t-1;      
                 o.indReturnPR = histData.indCumulArray.map(el => (j<el[0][0])? '':
                 +toPercent(toFraction(el[0][j])/toFraction(el[0][i-1])).toFixed(2));
                 worst = o.indReturnPR
                     .reduce((a,b) => (typeof b === 'number'&& b<a)? b:a, 1000);     //worst index from beginning of RTP
                     
-        if (stProd.prodType === 'A') {    
+        if (pType === 'A') {    
               if (memory) {
                 if (worst < couponBarrier) {
                     o.couponMissed ++;
@@ -198,7 +200,7 @@ function calcRTPs (stProd, histData) {
             } 
         }
 
-        if (stProd.prodType === 'A') {
+        if (pType === 'A') {
             o.matured = (o.lifeInMonths == +term);
             o.returnOfSP = o.couponPaid*couponLow/12 + ((o.matured && (worst < principalBarrier))? worst: 0);
         } else {
@@ -219,16 +221,16 @@ o.bondReturn = +toPercent(toFraction(histData.bondArray[i + o.lifeInMonths-1])/t
                                 o.returnOfSP,
                                 o.eqIndReturn,
                                 o.bondReturn],
-                stProd.prodType === 'A'? [
+                                pType === 'A'? [
                     o.couponMissed,
                     o.couponPaid,
                     o.lifeInMonths,
-                    o.lifeInMonths < 18? histData.dates[i + o.lifeInMonths-3]: '']: [],
+                    o.called? histData.dates[i + o.lifeInMonths-3]: '']: [],
                                 o.indReturnTR,
                                 [''],
                                 histData.indArray.map(el => i<el[0][0]? '': +el[0][i].toFixed(2)),
                                 histData.indArray.map(el => i<el[1][0]? '': +el[1][i].toFixed(2)),
-                                [annualized(o.returnOfSP, o.lifeInMonths),
+                                [pType === 'A'? couponLow*o.lifeInMonths/12: annualized(o.returnOfSP, o.lifeInMonths),
                                  annualized(o.eqIndReturn, o.lifeInMonths),
                                  annualized(o.bondReturn, o.lifeInMonths)]
                                  );
@@ -263,7 +265,7 @@ o.bondReturn = +toPercent(toFraction(histData.bondArray[i + o.lifeInMonths-1])/t
         statArr.push(res.map(el => el.returnOfSP), res.map(el => el.eqIndReturn), 
             res.map(el => el.bondReturn));   
 
-        if (stProd.prodType === 'A') {
+        if (pType === 'A') {
         statArr.push(res.map(el => el.couponMissed), res.map(el => el.couponPaid),
                 res.map(el => el.lifeInMonths));
         }
@@ -365,11 +367,13 @@ if (filename)
      }
 } 
 
-   return {filename: fullFileName, statInfo: statInfo, 
+   return {filename: fullFileName, 
+    data: {statInfo: statInfo, 
             statArr: [statArr, statArr.map(el => el.slice(indAct[1]))], 
             aboveArr: aboveArr,
             startDate: histData.dates[0],
-            worstArr: worstArr};    
+            worstArr: worstArr,
+            histPRArr: histData.indArray.map(el=>el[0].slice(2))}};    
 }
 
 //---------------------------------------------------
