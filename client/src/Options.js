@@ -4,6 +4,7 @@ import StatInfo from './StatInfo.js';
 import Form from './Form.js';
 import Graphs from './Graphs.js';
 import Raw from './Raw.js';
+import {histRet} from './histRetForStProd';
 
 const issuers = ['JPMorgan', 'Glenlivet', 'Rabinovitch'];
 const issuerCredits = ['A', 'B', 'C', 'D'];

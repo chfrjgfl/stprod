@@ -5,7 +5,7 @@ import { Chart } from "react-google-charts";
 
 function Raw (props) {
 
-        const { statArr, statInfo, worstArr, histPRArr } = props.data.data;
+        const { statArr, statInfo, worstArr, histPRArr, kalmanArr, meanArr } = props.data.data;
         const indexes = props.data.options.indexes;
 //        const prodType = props.data.options.prodType;
         //const[y,m] = props.data.startDate.split('-')
@@ -15,6 +15,9 @@ function Raw (props) {
                 .concat(statArr[0][0].map((el, i) => [calcDate(startDate, i), el, statArr[0][1][i], statArr[0][2][i], worstArr[i]]));
         const histData = [["Date"].concat(indexes)]
                 .concat(histPRArr[0].map((el, i) => [calcDate(startDate, i), el, histPRArr[1][i], histPRArr[2][i]]));
+
+        const kalmanData = [["Date", "S&P", "Kalman", "Mean"]]
+                .concat(histPRArr[0].map((el, i) => [calcDate(startDate, i), el, kalmanArr[i], meanArr[i]]));
 
         const options = {
             chartArea: { height: "70%", width: "100%", left: "5%",
@@ -171,6 +174,74 @@ function Raw (props) {
         },
       ]}
     />
+
+
+<Chart
+      chartType="LineChart"
+      key = "r3"
+      width="100%"
+      height="400px"
+      // style={{position:"relative", top:"320px", backgroundColor:"green"}}       //
+      data={ kalmanData }
+      options={{...options,
+        title:"S&P  and Kalman",
+        vAxis: {
+          baseline: 0,
+          baselineColor: "black",
+        },
+      }}
+      chartPackages={["corechart", "controls"]}
+
+      render={({ renderControl, renderChart }) => {            //width: "100%",height:"400px", top:"200px", backgroundColor:"pink"
+        return (
+          <div style={{ position:"relative", top:"320px", backgroundColor:"green" }}>
+            <div style={{  }}>{renderChart()}</div>
+            <div style={{ position:"relative",width: "100%", height:"50%", top:"0px" }}>{renderControl(() => true)}</div>
+            
+          </div>
+        );
+      }}
+
+      controls={[
+        {
+          controlType: "ChartRangeFilter",
+          position:"relative", top:"160px",
+          options: {
+            filterColumnIndex: 0,
+            //height:30,
+            ui: {
+              chartType: "LineChart",
+              chartOptions: {
+                //backgroundColor: "pink",
+
+                chartArea: {  height: "50%", 
+                
+                left: "10%", 
+                right: "10%", 
+
+                 },  //width: "81%",
+                 series: {
+                  3: {                    
+                    lineWidth: 0,
+                  }
+                },
+                hAxis: { baselineColor: "none" },
+              },
+            },
+          },
+          controlPosition: "bottom",
+          controlWrapperParams: {
+            state: {
+              range: {
+                start: new Date(1997, 1, 1),
+                end: new Date(2002, 2, 1),
+              },
+            },
+          },
+        },
+      ]}
+    />
+
       {/* </div>       */}
             {/* </div>         */}
             

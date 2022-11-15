@@ -2,8 +2,10 @@
 const express = require("express");
 const path = require('path');
 const PORT = process.env.PORT || 3001;
+const {KalmanFilter} = require('kalman-filter');
 
 const app = express();
+
 
 app.use(express.json());
 app.use(express.urlencoded());
@@ -142,7 +144,7 @@ function calcRTPs (stProd, histData) {
                         );                    
 
     const res = [];
-    const term = stProd.termInMonths;
+    const term = +stProd.termInMonths;
     const principalBarrier = stProd.principalBarrier;//-100);//*100; 
     const histLen = histData.bondArray.length;
     const callPrMonths = stProd.callable? stProd.callProtectionMonths: 0;
@@ -164,14 +166,14 @@ function calcRTPs (stProd, histData) {
             couponMissed:0,
             called: false,
             matured: false,
-            lifeInMonths: pType === 'A'? t: +term,
+            lifeInMonths: pType === 'A'? t: term,
             eqIndReturn: 0,
             indReturnPR:[],
             indReturnTR:[],
             activeInds: 0,
 
         }; 
-        o.endDate = histData.dates[i-3+t];
+        o.endDate = calcDate(o.startDate, term);
         let worst;
               
         for (let j=i+callPrMonths-1; j<i+t; j++) {    // from callPr till endDate - RTP for stProd
@@ -191,17 +193,19 @@ function calcRTPs (stProd, histData) {
                         }
 
               } else worst < couponBarrier? o.couponMissed ++: o.couponPaid ++;                    
-                 o.called = (worst>0);
-                 if(o.called) {
-                     o.lifeInMonths = j-i+1;
-                     j = i+t;
+                 if (worst>0)
+                  { 
+                    o.lifeInMonths = j-i+1;
+                    j = i+t;
+                    o.called = o.lifeInMonths < term;
                  }
                 
             } 
         }
 
         if (pType === 'A') {
-            o.matured = (o.lifeInMonths == +term);
+            o.matured = (o.lifeInMonths == term);
+            
             o.returnOfSP = o.couponPaid*couponLow/12 + ((o.matured && (worst < principalBarrier))? worst: 0);
         } else {
             o.returnOfSP = worst > 0? worst*stProd.upFactor: 
@@ -230,7 +234,7 @@ o.bondReturn = +toPercent(toFraction(histData.bondArray[i + o.lifeInMonths-1])/t
                                 [''],
                                 histData.indArray.map(el => i<el[0][0]? '': +el[0][i].toFixed(2)),
                                 histData.indArray.map(el => i<el[1][0]? '': +el[1][i].toFixed(2)),
-                                [pType === 'A'? couponLow*o.lifeInMonths/12: annualized(o.returnOfSP, o.lifeInMonths),
+                                [pType === 'A'? o.returnOfSP*12/o.lifeInMonths: annualized(o.returnOfSP, o.lifeInMonths),
                                  annualized(o.eqIndReturn, o.lifeInMonths),
                                  annualized(o.bondReturn, o.lifeInMonths)]
                                  );
@@ -356,16 +360,47 @@ XLSX.utils.sheet_add_aoa(wsNew, [[stProd.cusip,
 let fileOK = false;
 let filename = stProd.cusip; 
 let fullFileName = '';
-if (filename)     
-    while (!fileOK) {
-    fullFileName = __dirname + '\\xlsx\\' + filename + '.xlsx';
-    try { XLSX.writeFile(wbNew,fullFileName);
-        fileOK = true;
-    } catch {
-        filename += '-1';
-        fileOK = false;
-     }
-} 
+// if (filename)     
+//     while (!fileOK) {
+//     fullFileName = __dirname + '\\xlsx\\' + filename + '.xlsx';
+//     try { XLSX.writeFile(wbNew,fullFileName);
+//         fileOK = true;
+//     } catch {
+//         filename += '-1';
+//         fileOK = false;
+//      }
+// } 
+const histPRArr = histData.indArray.map(el=>el[0].slice(2));
+ 
+
+    const kFilter = new KalmanFilter();
+    // let observation = histPRArr[0];
+     const kalmanArr = [0]; //kFilter.filterAll(observation).flat();
+     const meanArr = [0];
+    
+    let previousCorrected = null;
+    let accum = 0;
+    //const results = [];
+    histPRArr[0].forEach((observation, ind) => {
+        const predicted = kFilter.predict({
+            previousCorrected
+        });
+    
+         const correctedState = kFilter.correct({
+            predicted,
+            observation
+        });
+    
+        kalmanArr.push(correctedState.mean[0][0]);
+    
+        // update the previousCorrected for next loop iteration
+        previousCorrected = correctedState
+
+        accum += observation;
+        if (ind>3) accum -= histPRArr[0][ind-4];
+        meanArr.push(accum/(4));
+    });
+
 
    return {filename: fullFileName, 
     data: {statInfo: statInfo, 
@@ -373,7 +408,10 @@ if (filename)
             aboveArr: aboveArr,
             startDate: histData.dates[0],
             worstArr: worstArr,
-            histPRArr: histData.indArray.map(el=>el[0].slice(2))}};    
+            histPRArr: histPRArr,
+            kalmanArr: kalmanArr,
+            meanArr: meanArr
+        }};    
 }
 
 //---------------------------------------------------
@@ -444,7 +482,7 @@ function calcDate(date, n) {
         y--;
         m += 12;
     }
-    if (m<10) m='0'+m;
+    if (m<10) m='0' + m;
     return[y, m].join('-');
 }
 

@@ -15,6 +15,7 @@
   "license": "ISC",
   "dependencies": {
     "express": "^4.18.1",
+    "kalman-filter": "^1.11.1",
     "simple-statistics": "^7.7.6",
     "xlsx": "^0.18.5"
   }
