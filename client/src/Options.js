@@ -69,7 +69,7 @@ const issuerCredits = ['A', 'B', 'C', 'D'];
         //             });
         // const f1 = await f.json();
         //     alert (`Results file: ${f1.filename}`);
-        const f1 = serverMain(options);   //123456
+        const f1 = serverMain(options);   
             setState({options: options, data: f1.data});
 
       }    

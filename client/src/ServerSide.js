@@ -377,7 +377,7 @@ export default function serverMain(stProd) {
     }
         
     
-    function writeExcel(data, fileName) {   //12356
+    function writeExcel(data, fileName) {   
         let wb = XLSX.utils.book_new(); 
         let ws = XLSX.utils.aoa_to_sheet(data); 
         XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
