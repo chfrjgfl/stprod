@@ -72,6 +72,10 @@ const issuerCredits = ['A', 'B', 'C', 'D'];
         const f1 = serverMain(options);   
             setState({options: options, data: f1.data});
 
+            // let file = input.files[0];
+
+            // alert(`File name: ${file.name}`);
+
       }    
 
    

@@ -272,9 +272,11 @@ export default function serverMain(stProd) {
        
             const wbNew = XLSX.utils.book_new();
             XLSX.utils.book_append_sheet(wbNew, wsNew, stProd.cusip);
-    let fileOK = false;
-    let filename = stProd.cusip; 
-    let fullFileName = '';
+if (stProd.cusip) XLSX.writeFile(wbNew, stProd.cusip + '.xlsx', { compression: true });
+
+    // let fileOK = false;
+    // let filename = stProd.cusip + '.xlsx'; //stProd.cusip; 
+    // let fullFileName = '';
     // if (filename)     
     //     while (!fileOK) {
     //     fullFileName = __dirname + '\\xlsx\\' + filename + '.xlsx';
@@ -317,7 +319,7 @@ export default function serverMain(stProd) {
         });
     
     
-       return {filename: fullFileName, 
+       return {//filename: fullFileName, 
         data: {statInfo: statInfo, 
                 statArr: [statArr, statArr.map(el => el.slice(indAct[1]))], 
                 aboveArr: aboveArr,
