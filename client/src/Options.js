@@ -4,7 +4,7 @@ import StatInfo from './StatInfo.js';
 import Form from './Form.js';
 import Graphs from './Graphs.js';
 import Raw from './Raw.js';
-import {histRet} from './histRetForStProd';
+import serverMain from './ServerSide.js';
 
 const issuers = ['JPMorgan', 'Glenlivet', 'Rabinovitch'];
 const issuerCredits = ['A', 'B', 'C', 'D'];
@@ -60,16 +60,16 @@ const issuerCredits = ['A', 'B', 'C', 'D'];
         event.preventDefault();
         alert(JSON.stringify(options));        
 
-            const f = await fetch("/api", {
-                      method: "POST", 
-                      headers: {
-                        "Content-Type": "application/json"
-                      },
-                      body: JSON.stringify(options),
-                    });
-        const f1 = await f.json();
-            alert (`Results file: ${f1.filename}`);
-
+        //     const f = await fetch("/api", {
+        //               method: "POST", 
+        //               headers: {
+        //                 "Content-Type": "application/json"
+        //               },
+        //               body: JSON.stringify(options),
+        //             });
+        // const f1 = await f.json();
+        //     alert (`Results file: ${f1.filename}`);
+        const f1 = serverMain(options);
             setState({options: options, data: f1.data});
 
       }    
