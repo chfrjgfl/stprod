@@ -88,13 +88,13 @@ export default function serverMain(stProd) {
                 activeInds: 0,
     
             }; 
-            o.endDate = calcDate(o.startDate, term);
+            o.endDate = calcDate(o.startDate, term-1);
             let worst;
                   
             for (let j=i+callPrMonths-1; j<i+t; j++) {    // from callPr till endDate - RTP for stProd
                 if (pType === 'B') j = i+t-1;      
                     o.indReturnPR = histData.indCumulArray.map(el => (j<el[0][0])? '':
-                    +toPercent(toFraction(el[0][j])/toFraction(el[0][i-1])).toFixed(2));
+                    toPercent(toFraction(el[0][j])/toFraction(el[0][i-1])));
                     worst = o.indReturnPR
                         .reduce((a,b) => (typeof b === 'number'&& b<a)? b:a, 1000);     //worst index from beginning of RTP
                         
@@ -149,7 +149,8 @@ export default function serverMain(stProd) {
                                     [''],
                                     histData.indArray.map(el => i<el[0][0]? '': +el[0][i].toFixed(2)),
                                     histData.indArray.map(el => i<el[1][0]? '': +el[1][i].toFixed(2)),
-                                    [pType === 'A'? o.returnOfSP*12/o.lifeInMonths: annualized(o.returnOfSP, o.lifeInMonths),
+                                    [pType === 'A'? (o.returnOfSP*12/o.lifeInMonths + (o.returnOfSP < 0? annualized(worst, o.lifeInMonths): 0)): 
+                                                    annualized(o.returnOfSP, o.lifeInMonths),
                                      annualized(o.eqIndReturn, o.lifeInMonths),
                                      annualized(o.bondReturn, o.lifeInMonths)]
                                      );
