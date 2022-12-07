@@ -355,38 +355,38 @@ if (stProd.cusip) XLSX.writeFile(wbNew, stProd.cusip + '.xlsx', { compression: t
     }
     
     //---------------------------------------------
-    function remakeHistData(file) {
-        const wb = XLSX.readFile(file);
-        const ws = wb.Sheets[wb.SheetNames[0]];
-        const ss = XLSX.utils.decode_range(ws['!ref']);    
+    // function remakeHistData(file) {
+    //     const wb = XLSX.readFile(file);
+    //     const ws = wb.Sheets[wb.SheetNames[0]];
+    //     const ss = XLSX.utils.decode_range(ws['!ref']);    
     
-        const arr = XLSX.utils.sheet_to_json(ws, { header: 1 });
-        const wsNew = XLSX.utils.aoa_to_sheet([arr[0]]);
+    //     const arr = XLSX.utils.sheet_to_json(ws, { header: 1 });
+    //     const wsNew = XLSX.utils.aoa_to_sheet([arr[0]]);
     
-        for (let i = 1; i<ss.e.r; i++) {
-            const cums = [arr[i][0]+' cum.'];
-            const adds = [arr[i][0]+' add.'];
-            for (let j = 3; j<=ss.e.c; j++) {
-                if(typeof arr[i][j] == 'number') {
-                    cums[j] = toPercent(toFraction(arr[i][j])*toFraction(cums[j-1]));
-                    adds[j] = arr[i][j] + (adds[j-1] || 0);
-                }
-            }
-            XLSX.utils.sheet_add_aoa(wsNew, [arr[i], cums, adds], {origin: -1});    
-        }
-        const wbNew = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wbNew, wsNew, wb.SheetNames[0]);
-        XLSX.writeFile(wbNew, __dirname+ '\\xlsx\\HistRetForStProdNew.xlsx');
-    }
+    //     for (let i = 1; i<ss.e.r; i++) {
+    //         const cums = [arr[i][0]+' cum.'];
+    //         const adds = [arr[i][0]+' add.'];
+    //         for (let j = 3; j<=ss.e.c; j++) {
+    //             if(typeof arr[i][j] == 'number') {
+    //                 cums[j] = toPercent(toFraction(arr[i][j])*toFraction(cums[j-1]));
+    //                 adds[j] = arr[i][j] + (adds[j-1] || 0);
+    //             }
+    //         }
+    //         XLSX.utils.sheet_add_aoa(wsNew, [arr[i], cums, adds], {origin: -1});    
+    //     }
+    //     const wbNew = XLSX.utils.book_new();
+    //     XLSX.utils.book_append_sheet(wbNew, wsNew, wb.SheetNames[0]);
+    //     XLSX.writeFile(wbNew, __dirname+ '\\xlsx\\HistRetForStProdNew.xlsx');
+    // }
         
     
-    function writeExcel(data, fileName) {   
-        let wb = XLSX.utils.book_new(); 
-        let ws = XLSX.utils.aoa_to_sheet(data); 
-        XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
-        XLSX.writeFile(wb, `${__dirname}/${fileName}`, {bookType: "biff8"});
-         console.log(`${fileName} ready`);
-    }
+    // function writeExcel(data, fileName) {   
+    //     let wb = XLSX.utils.book_new(); 
+    //     let ws = XLSX.utils.aoa_to_sheet(data); 
+    //     XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+    //     XLSX.writeFile(wb, `${__dirname}/${fileName}`, {bookType: "biff8"});
+    //      console.log(`${fileName} ready`);
+    // }
     
     function calcDate(date, n) {
         let m = + date.slice(-2);

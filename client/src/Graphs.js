@@ -96,7 +96,7 @@ if(prodType === 'B') {
   stepsArr.push('< '+k);
   for (let m = k; m<=j; m+=binw) {
     steps.push(m);
-    if(m == 0) stepsArr.push('0');
+    if(m === 0) stepsArr.push('0');
     if(m < j) stepsArr.push(''+m+'..'+(m+binw));    
   }
   stepsArr.push('> '+j);
@@ -148,7 +148,7 @@ for (let el of dividedArr) {
                               Math.floor(120/stepsArr.length);
     let x = prodType === 'A'? 1: binw;
     let c = a[0] < z? [30+Math.floor(mul*a[0]), 0, 250]: 
-                a[0] == z? [222, 222, 222]:
+                a[0] === z? [222, 222, 222]:
                   (a[0]-z)*x < ar[0]? [0, 200, 30+Math.floor(mul*a[0])]:
                     [250, 30+Math.floor(mul*a[0]), 0]                          //here
     ar[2*i+2] = `color: rgb(${c[0]}, ${c[1]}, ${c[2]})`;
@@ -199,7 +199,7 @@ for (let el of dividedArr) {
               } }         
             />  
             
-            {(i == 0) && <>
+            {(i === 0) && <>
 
             
             <Chart

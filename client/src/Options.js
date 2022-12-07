@@ -34,26 +34,26 @@ const issuerCredits = ['A', 'B', 'C', 'D'];
             }
         });
 
-        function handleInputChange(event) {
-        const target = event.target;
-        const value = target.type === 'checkbox' ? target.checked : target.value;
-        const name = target.name;
+      //   function handleInputChange(event) {
+      //   const target = event.target;
+      //   const value = target.type === 'checkbox' ? target.checked : target.value;
+      //   const name = target.name;
    
-        setState({            
-          [name]: value
-        });
-      }
+      //   setState({            
+      //     [name]: value
+      //   });
+      // }
 
-      function handleMultInputChange(event) {
-        const value = event.target.value;
-        const name = event.target.name;
-        const ss = this.state[name];
-        ss.includes(value)? ss.splice(ss.indexOf(value),1): ss.push(value);
+      // function handleMultInputChange(event) {
+      //   const value = event.target.value;
+      //   const name = event.target.name;
+      //   const ss = this.state[name];
+      //   ss.includes(value)? ss.splice(ss.indexOf(value),1): ss.push(value);
     
-        setState({
-          [name]: ss
-        });
-      }
+      //   setState({
+      //     [name]: ss
+      //   });
+      // }
 
     const handleSubmit = async (event, options) => {
 

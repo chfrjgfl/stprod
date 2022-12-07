@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React from 'react';  //, { useState }
 //import ReactDOM from 'react-dom/client';
 import './Graph.css';
 import { Chart } from "react-google-charts";
 
 function Raw (props) {
 
-        const { statArr, statInfo, worstArr, histPRArr, kalmanArr, meanArr } = props.data.data;
+        const { statArr, worstArr, histPRArr, kalmanArr, meanArr } = props.data.data;  //, statInfo
         const indexes = props.data.options.indexes;
 //        const prodType = props.data.options.prodType;
         //const[y,m] = props.data.startDate.split('-')

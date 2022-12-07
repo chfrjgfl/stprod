@@ -6,12 +6,12 @@ import { Chart } from "react-google-charts";
 
 
 function StatInfo (props) {
-    const { statInfo, statArr, aboveArr } = props.data.data;
+    const { statInfo, aboveArr } = props.data.data;  //, statArr
     // const statArr = arrSort(props.data.statArr.slice());
     const [mode, setMode] = useState('0');
-    const [sliderValue, setSliderValue] = useState (0);
-    const [worthIt, setWorthIt] = useState ({val: 0, arr: statInfo[mode]
-                          .find(el => el.fname === '% Negative').array.slice(0, 3)});
+    // const [sliderValue, setSliderValue] = useState (0);
+    // const [worthIt, setWorthIt] = useState ({val: 0, arr: statInfo[mode]
+    //                       .find(el => el.fname === '% Negative').array.slice(0, 3)});
 
     const wide = statInfo[0][statInfo[0].length-1].array.length > 3;
     //const wMode = wide? "100%": "400px";
@@ -41,8 +41,8 @@ function StatInfo (props) {
    
     function handleChange(event) {
       setMode(event.target.value);
-      setWorthIt({val: sliderValue, 
-        arr: statArr[mode].slice(0, 3).map(el => ((el.reduce((a, b) => {if(b > sliderValue) {a++;}return a;}, 0) * 100/el.length).toFixed(2)))})
+      // setWorthIt({val: sliderValue, 
+      //   arr: statArr[mode].slice(0, 3).map(el => ((el.reduce((a, b) => {if(b > sliderValue) {a++;}return a;}, 0) * 100/el.length).toFixed(2)))})
    }
 
     return (
